@@ -11,6 +11,9 @@ const  PORT = process.env.PORT || 8070;
 app.use(cors());
 app.use(bodyParser.json());
 
+const authRoutes = require("./routes/auth.routes");
+app.use("/api/auth", authRoutes);
+
 const URI = process.env.MONGODB_URI;
 
 mongoose.connect(URI)
