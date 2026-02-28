@@ -17,6 +17,9 @@ app.use("/api/auth", authRoutes);
 const appointmentRoutes = require("./routes/appointment.routes");
 app.use("/api/appointments", appointmentRoutes);
 
+const messageRoutes = require("./routes/message.routes");
+app.use("/api/messages", messageRoutes);
+
 const URI = process.env.MONGODB_URI;
 
 mongoose.connect(URI)
