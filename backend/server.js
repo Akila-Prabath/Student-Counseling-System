@@ -23,6 +23,9 @@ app.use("/api/messages", messageRoutes);
 const anonymousRoutes = require("./routes/anonymous.routes");
 app.use("/api/anonymous", anonymousRoutes);
 
+const resourceRoutes = require("./routes/resource.routes");
+app.use("/api/resources", resourceRoutes);
+
 const URI = process.env.MONGODB_URI;
 
 mongoose.connect(URI)
