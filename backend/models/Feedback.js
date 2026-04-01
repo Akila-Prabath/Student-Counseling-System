@@ -13,6 +13,12 @@ const feedbackSchema = new mongoose.Schema({
         required: true
     },
 
+    appointment: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Appointment",
+        required: true
+    },
+
     rating: {
         type: Number,
         min: 1,

@@ -1,13 +1,12 @@
 const jwt = require("jsonwebtoken");
-const { base } = require("../models/User");
 
 exports.protect = (req, res, next) => {
-    try{
-        const authHeader = req.header.authorization;
+    try {
+        const authHeader = req.headers.authorization;
 
-        if (!authHeader || !authHeader.startWith("Bearer")) {
+        if (!authHeader || !authHeader.startsWith("Bearer")) {
             return res.status(401).json({
-                message: "Not authorixed, no token"
+                message: "Not authorized, no token"
             });
         }
 
@@ -17,7 +16,9 @@ exports.protect = (req, res, next) => {
 
         req.user = decoded;
         next();
+
     } catch (error) {
+        console.error("JWT ERROR:", error.message);
         return res.status(401).json({
             message: "Token is not valid"
         });
@@ -27,11 +28,10 @@ exports.protect = (req, res, next) => {
 exports.authorize = (...roles) => {
     return (req, res, next) => {
         if (!roles.includes(req.user.role)) {
-            return res.status(403).json ({
+            return res.status(403).json({
                 message: "You do not have permission"
             });
         }
-
         next();
     };
 };

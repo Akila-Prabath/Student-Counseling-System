@@ -30,9 +30,9 @@ router.post("/", async (req, res) => {
 
 router.get("/", protect, authorize("counselor","admin"), async (req, res) => {
     try{
-        const message = (await AnonymousMessage.find()).toSorted({ createdAt: -1 });
+        const message = await AnonymousMessage.find().sort({ createdAt: -1 });
         res.json(message);
-    } catch (eror) {
+    } catch (error) {
         res.status(500).json({ message: "Server error"});
     }
 });

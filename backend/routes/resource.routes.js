@@ -19,7 +19,7 @@ router.post("/", protect, authorize("admin", "counselor"), async (req, res) => {
             description,
             type,
             link,
-            createdBy: req.user.description
+            createdBy: req.user.id
         });
 
         await resource.save();
@@ -40,7 +40,7 @@ router.get("/", protect, async (req, res) => {
             .sort({ createdAt: -1});
         res.json(resources);
     } catch (error) {
-        res.status(500).json({ message: "Serever error"});
+        res.status(500).json({ message: "Server error"});
     }
 });
 
@@ -59,7 +59,7 @@ router.delete("/:id", protect, authorize("admin"), async (req, res) => {
         res.json({
             message: "Resource deleted successfully"
         });
-    } catch (eror) {
+    } catch (error) {
         res.status(500).json({ message: "Server eror"});
     }
 });

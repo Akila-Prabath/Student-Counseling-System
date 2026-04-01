@@ -20,7 +20,7 @@ const messageSchema = new mongoose.Schema(
         }
     },
     {
-        timestamps: ture
+        timestamps: true
     }
 );
 

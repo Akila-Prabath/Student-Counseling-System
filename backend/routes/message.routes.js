@@ -36,7 +36,7 @@ router.get("/:userId", protect, async (req, res) => {
         const otherUserId = req.params.userId;
 
         const message = await Message.find({
-            $r: [
+            $or: [
                 { sender: req.user.id, receiver: otherUserId },
                 { sender: otherUserId, receiver: req.user.id }
             ]
