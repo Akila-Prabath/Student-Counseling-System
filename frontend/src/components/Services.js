@@ -41,12 +41,14 @@ function Services() {
   ];
 
   return (
-    <div id="services" className="py-20 px-10 bg-orange-100 text-left">
+    <div id="services" className="py-20 px-10 bg-orange-100 text-center">
 
-      <h2 className="text-3xl font-bold mb-5 text-center">Our Services</h2>
-      <h3 className="text-orange-700 text-4xl font-bold mb-10 text-center">Therapist & Treatments</h3>
-
-      <div className="grid md:grid-cols-3 gap-10">
+      <div className="inline-block bg-orange-300 text-green-800 px-4 py-1 rounded-full text-sm mb-4 text-center">Our Services</div>
+      <h3 className="text-black text-4xl font-bold mb-10 text-center">Therapist & <span className="text-orange-600 italic font-semibold">Treatments</span></h3>
+      <p className="text-gray-600 max-w-2xl mx-auto mb-10">
+        We offer a range of mental health services including therapy, counseling, and support systems to help you live a healthier and happier life.
+      </p>
+      <div className="grid md:grid-cols-3 gap-10 text-left">
 
         {services.map((service, index) => (
 

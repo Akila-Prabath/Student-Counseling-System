@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
+import Welcome from "../components/Welcome";
 import Services from "../components/Services";
 import About from "../components/About";
 import Testimonials from "../components/Testimonials";
@@ -14,6 +15,7 @@ function Home() {
     <div className="pt-0">
       <Navbar onLoginClick={() => setShowLogin(true)} />
       <Hero onLoginClick={() => setShowLogin(true)} />
+      <Welcome />
       <Services />
       <About />
       <Testimonials />

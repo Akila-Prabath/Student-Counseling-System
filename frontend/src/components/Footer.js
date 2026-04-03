@@ -1,8 +1,88 @@
+import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
+import { MdEmail } from "react-icons/md";
+
 function Footer() {
   return (
-    <div id="contact" className="bg-green-700 text-white text-center py-6">
-      <p>© 2026 MindCare. All rights reserved.</p>
-    </div>
+    <footer id="contact" className="bg-gray-200 text-gray-700 pt-16 pb-6 px-6 md:px-20">
+
+      {/* TOP SECTION */}
+      <div className="grid md:grid-cols-4 gap-10">
+
+        {/* LOGO + DESCRIPTION */}
+        <div>
+          <h2 className="text-2xl font-bold text-black mb-4">
+            MindCare
+          </h2>
+
+          <p className="text-sm leading-relaxed">
+            At MindCare, we understand that life’s challenges can feel overwhelming. 
+            Our team provides compassionate support and expert care to help you 
+            achieve better mental well-being.
+          </p>
+        </div>
+
+        {/* COMPANY */}
+        <div>
+          <h3 className="font-semibold text-lg mb-4 text-black">Company</h3>
+          <ul className="space-y-2 text-sm">
+            <li className="hover:text-orange-600 cursor-pointer">Individual Therapy</li>
+            <li className="hover:text-orange-600 cursor-pointer">Couples Counseling</li>
+            <li className="hover:text-orange-600 cursor-pointer">Mental Resources</li>
+            <li className="hover:text-orange-600 cursor-pointer">Stress Management</li>
+            <li className="hover:text-orange-600 cursor-pointer">Depression Therapy</li>
+            <li className="hover:text-orange-600 cursor-pointer">Anonymous Support</li>
+          </ul>
+        </div>
+
+        {/* SERVICES */}
+        <div>
+          <h3 className="font-semibold text-lg mb-4 text-black">Our Services</h3>
+          <ul className="space-y-2 text-sm">
+            <li className="hover:text-orange-600 cursor-pointer">About Us</li>
+            <li className="hover:text-orange-600 cursor-pointer">Our Services</li>
+            <li className="hover:text-orange-600 cursor-pointer">Contact Us</li>
+          </ul>
+        </div>
+
+        {/* CONTACT */}
+        <div>
+          <h3 className="font-semibold text-lg mb-4 text-black">Contact</h3>
+
+          <div className="flex items-start gap-2 mb-3">
+            <FaLocationDot className="text-orange-600 mt-1" />
+            <p className="text-sm">10 S Main St, Kurunegala, Sri Lanka</p>
+          </div>
+
+          <div className="flex items-start gap-2 mb-4">
+            <MdEmail className="text-orange-600 mt-1" />
+            <p className="text-sm">contact@mindcare.com</p>
+          </div>
+
+          {/* Social Icons */}
+          <div className="flex gap-4 mt-2 text-lg">
+            <FaFacebookF className="cursor-pointer hover:text-orange-600" />
+            <FaTwitter className="cursor-pointer hover:text-orange-600" />
+            <FaInstagram className="cursor-pointer hover:text-orange-600" />
+            <FaYoutube className="cursor-pointer hover:text-orange-600" />
+          </div>
+        </div>
+
+      </div>
+
+      {/* DIVIDER */}
+      <div className="border-t mt-10 pt-6 flex flex-col md:flex-row justify-between items-center text-sm">
+
+        <p>© 2026 MindCare. All rights reserved.</p>
+
+        <div className="flex gap-6 mt-4 md:mt-0">
+          <span className="hover:text-orange-600 cursor-pointer">Terms & Conditions</span>
+          <span className="hover:text-orange-600 cursor-pointer">Privacy Policy</span>
+        </div>
+
+      </div>
+
+    </footer>
   );
 }
 
