@@ -1,6 +1,6 @@
 function About() {
   return (
-    <div className="py-20 px-10 flex flex-col md:flex-row items-center gap-10">
+    <div id="about" className="py-20 px-10 flex flex-col md:flex-row items-center gap-10">
       
       <img
         src="https://cdn-icons-png.flaticon.com/512/3048/3048122.png"

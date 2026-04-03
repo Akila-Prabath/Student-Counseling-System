@@ -11,7 +11,7 @@ function Home() {
   const [showLogin, setShowLogin] = useState(false);
 
   return (
-    <div>
+    <div className="pt-0">
       <Navbar onLoginClick={() => setShowLogin(true)} />
       <Hero onLoginClick={() => setShowLogin(true)} />
       <Services />

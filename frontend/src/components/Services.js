@@ -1,30 +1,85 @@
+import individualImg from "../assets/services/individual.jpg";
+import couplesImg from "../assets/services/couples.jpg";
+import stressImg from "../assets/services/stress.jpg";
+import depressionImg from "../assets/services/depression.jpg";
+import resourcesImg from "../assets/services/resources.jpg";
+import anonymousImg from "../assets/services/anonymous.jpg";
+
 function Services() {
+
+  const services = [
+    {
+      title: "Individual Therapy",
+      desc: "One-on-one sessions with licensed professionals to help you understand your thoughts, manage emotions, and improve your mental well-being.",
+      img: individualImg
+    },
+    {
+      title: "Couples Counseling",
+      desc: "Strengthen your relationship through guided conversations, conflict resolution strategies, and emotional support for both partners.",
+      img: couplesImg
+    },
+    {
+      title: "Stress Management",
+      desc: "Learn practical techniques to reduce stress, improve focus, and maintain a balanced and healthy lifestyle.",
+      img: stressImg
+    },
+    {
+      title: "Depression Therapy",
+      desc: "Receive compassionate support and evidence-based therapy to overcome depression and regain control of your life.",
+      img: depressionImg
+    },
+    {
+      title: "Mental Resources",
+      desc: "Explore curated articles, videos, and self-help guides to support your mental health journey and personal growth.",
+      img: resourcesImg
+    },
+    {
+      title: "Anonymous Support",
+      desc: "Share your concerns freely and get guidance without revealing your identity in a safe and confidential environment.",
+      img: anonymousImg
+    }
+  ];
+
   return (
-    <div className="py-20 px-10 text-center bg-gray-50">
-      <h2 className="text-3xl font-bold mb-12">Our Services</h2>
+    <div id="services" className="py-20 px-10 bg-orange-100 text-left">
+
+      <h2 className="text-3xl font-bold mb-5 text-center">Our Services</h2>
+      <h3 className="text-orange-700 text-4xl font-bold mb-10 text-center">Therapist & Treatments</h3>
 
       <div className="grid md:grid-cols-3 gap-10">
-        
-        <div className="p-8 bg-white shadow-lg rounded-xl hover:shadow-2xl transition">
-          <h3 className="text-xl font-semibold mb-3">Online Counseling</h3>
-          <p className="text-gray-600">
-            Talk with experts anytime from anywhere.
-          </p>
-        </div>
 
-        <div className="p-8 bg-white shadow-lg rounded-xl hover:shadow-2xl transition">
-          <h3 className="text-xl font-semibold mb-3">Anonymous Support</h3>
-          <p className="text-gray-600">
-            Share your feelings without revealing identity.
-          </p>
-        </div>
+        {services.map((service, index) => (
 
-        <div className="p-8 bg-white shadow-lg rounded-xl hover:shadow-2xl transition">
-          <h3 className="text-xl font-semibold mb-3">Mental Resources</h3>
-          <p className="text-gray-600">
-            Access guides, tips, and helpful materials.
-          </p>
-        </div>
+          <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition overflow-hidden group">
+
+            {/* Image + Hover */}
+            <div className="relative h-80 overflow-hidden group">
+
+              <img
+                src={service.img}
+                alt={service.title}
+                className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+              />
+
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+
+                <button className="bg-orange-600 text-white px-5 py-2 rounded-lg font-semibold transform scale-90 group-hover:scale-100 transition duration-300">
+                  Get Started
+                </button>
+
+              </div>
+
+            </div>
+
+            {/* Content */}
+            <div className="p-6">
+              <h3 className="text-xl font-semibold mb-3">{service.title}</h3>
+              <p className="text-gray-600 text-sm">{service.desc}</p>
+            </div>
+
+          </div>
+
+        ))}
 
       </div>
     </div>
