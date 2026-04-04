@@ -3,8 +3,9 @@ import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import Welcome from "../components/Welcome";
 import Services from "../components/Services";
+import Stats from "../components/Stats";
 import About from "../components/About";
-import Testimonials from "../components/Testimonials";
+import FAQ from "../components/FAQ";
 import Footer from "../components/Footer";
 import LoginModal from "../components/LoginModal";
 
@@ -17,8 +18,9 @@ function Home() {
       <Hero onLoginClick={() => setShowLogin(true)} />
       <Welcome />
       <Services />
+      <Stats />
       <About />
-      <Testimonials />
+      <FAQ />
       <Footer />
 
       <LoginModal

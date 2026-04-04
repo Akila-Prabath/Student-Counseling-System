@@ -43,7 +43,7 @@ function Services() {
   return (
     <div id="services" className="py-20 px-10 bg-orange-100 text-center">
 
-      <div className="inline-block bg-orange-300 text-green-800 px-4 py-1 rounded-full text-sm mb-4 text-center">Our Services</div>
+      <div className="inline-block bg-orange-300 text-orange-950 px-4 py-1 rounded-full text-sm mb-4 text-center">Our Services</div>
       <h3 className="text-black text-4xl font-bold mb-10 text-center">Therapist & <span className="text-orange-600 italic font-semibold">Treatments</span></h3>
       <p className="text-gray-600 max-w-2xl mx-auto mb-10">
         We offer a range of mental health services including therapy, counseling, and support systems to help you live a healthier and happier life.

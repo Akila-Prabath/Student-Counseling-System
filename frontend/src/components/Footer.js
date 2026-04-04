@@ -4,7 +4,7 @@ import { MdEmail } from "react-icons/md";
 
 function Footer() {
   return (
-    <footer id="contact" className="bg-gray-200 text-gray-700 pt-16 pb-6 px-6 md:px-20">
+    <footer id="contact" className="bg-stone-300 text-gray-800 pt-16 pb-6 px-6 md:px-20">
 
       {/* TOP SECTION */}
       <div className="grid md:grid-cols-4 gap-10">
@@ -24,7 +24,7 @@ function Footer() {
 
         {/* COMPANY */}
         <div>
-          <h3 className="font-semibold text-lg mb-4 text-black">Company</h3>
+          <h3 className="font-semibold text-lg mb-4 text-black">Our Services</h3>
           <ul className="space-y-2 text-sm">
             <li className="hover:text-orange-600 cursor-pointer">Individual Therapy</li>
             <li className="hover:text-orange-600 cursor-pointer">Couples Counseling</li>
@@ -37,10 +37,11 @@ function Footer() {
 
         {/* SERVICES */}
         <div>
-          <h3 className="font-semibold text-lg mb-4 text-black">Our Services</h3>
+          <h3 className="font-semibold text-lg mb-4 text-black">Quick Links</h3>
           <ul className="space-y-2 text-sm">
+            <li className="hover:text-orange-600 cursor-pointer">Home</li>
+            <li className="hover:text-orange-600 cursor-pointer">Services</li>
             <li className="hover:text-orange-600 cursor-pointer">About Us</li>
-            <li className="hover:text-orange-600 cursor-pointer">Our Services</li>
             <li className="hover:text-orange-600 cursor-pointer">Contact Us</li>
           </ul>
         </div>

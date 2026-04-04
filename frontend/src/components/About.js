@@ -34,7 +34,7 @@ function About() {
     <div id="about" className="py-20 px-10 bg-white text-center">
 
       {/* Top Badge */}
-      <div className="inline-block bg-orange-300 text-green-800 px-4 py-1 rounded-full text-sm mb-4">
+      <div className="inline-block bg-orange-300 text-orange-950 px-4 py-1 rounded-full text-sm mb-4">
         Behind the Scene
       </div>
 

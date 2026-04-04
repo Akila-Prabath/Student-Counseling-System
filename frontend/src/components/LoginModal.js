@@ -1,63 +1,120 @@
 import { useState } from "react";
 import API from "../services/api";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function LoginModal({ isOpen, onClose }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   if (!isOpen) return null;
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
     try {
       const res = await API.post("/auth/login", { email, password });
 
+      // Save token
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.user.role);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      alert("Login successful!");
+      // Redirect based on role (optional)
+      window.location.href = "/dashboard";
+
       onClose();
 
     } catch (error) {
-      alert(error.response?.data?.message || "Login failed");
+      setError(error.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      
-      <div className="bg-white p-8 rounded-lg w-96 shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">Login</h2>
+    <div
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50"
+      onClick={onClose}
+    >
 
-        <form onSubmit={handleLogin}>
+      {/* Modal */}
+      <div
+        className="bg-white/90 backdrop-blur-md p-8 rounded-2xl w-[90%] max-w-md shadow-2xl relative"
+        onClick={(e) => e.stopPropagation()}
+      >
+
+        {/* Title */}
+        <h2 className="text-3xl font-bold mb-2 text-center">
+          Welcome Back to MindCare 👋
+        </h2>
+
+        <p className="text-center text-gray-500 mb-6">
+          Login to your account
+        </p>
+
+        {/* Error */}
+        {error && (
+          <div className="bg-red-100 text-red-600 p-2 rounded mb-4 text-sm text-center">
+            {error}
+          </div>
+        )}
+
+        {/* Form */}
+        <form onSubmit={handleLogin} className="space-y-4">
+
+          {/* Email */}
           <input
             type="email"
-            placeholder="Email"
-            className="w-full p-2 border mb-4 rounded"
+            placeholder="Enter your email"
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
 
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full p-2 border mb-4 rounded"
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          {/* Password */}
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter your password"
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
 
-          <button className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
-            Login
+            <span
+              className="absolute right-3 top-3 cursor-pointer text-gray-500"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+
+          {/* Login Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700 transition"
+          >
+            {loading ? "Logging in..." : "Login"}
           </button>
+
         </form>
 
+        {/* Close Button */}
         <button
           onClick={onClose}
-          className="mt-4 text-gray-500 hover:text-black"
+          className="absolute top-3 right-4 text-red-800 hover:text-red text-xl"
         >
-          Close
+          ✕
         </button>
-      </div>
 
+      </div>
     </div>
   );
 }
