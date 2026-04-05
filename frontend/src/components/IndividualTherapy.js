@@ -2,7 +2,7 @@ import individual from "../assets/services/individual.jpg";
 
 //import { FaStar } from "react-icons/fa";
 
-function WhoWeAre() {
+function IndividualTherapy() {
   return (
     <div className="py-20 px-6 md:px-20 bg-gray-100">
 
@@ -23,9 +23,13 @@ function WhoWeAre() {
 
           {/* Description */}
           <p className="text-gray-600 mb-6 max-w-xl">
-            Located in Kurunegala, Sri Lanka, Mindcare specializes in providing top psychotherapy services. 
-            Our team of experienced professionals is dedicated to helping you achieve mental wellness and personal growth. 
-            Trust Mindcare for all your psychotherapy needs.
+            Individual therapy provides a safe, confidential space where 
+            you can openly discuss your thoughts, emotions, and challenges 
+            with a licensed professional. Through one-on-one sessions, our 
+            therapists help you gain deeper self-awareness, identify patterns,
+            and develop healthier coping strategies. Whether you are dealing with 
+            anxiety, stress, trauma, or personal growth challenges, individual therapy empowers 
+            you to take control of your mental well-being and build a more balanced life.
           </p>
         </div>
 
@@ -40,4 +44,4 @@ function WhoWeAre() {
   );
 }
 
-export default WhoWeAre;
+export default IndividualTherapy;

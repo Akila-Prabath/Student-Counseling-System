@@ -1,19 +1,19 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
-import IndividualTherapy from "../components/IndividualTherapy";
-import IPageHeader from "../components/IPageHeader";
+import AnonymousSupport from "../components/AnonymousSupport";
+import APageHeader from "../components/APageHeader";
 import FAQ from "../components/FAQ";
 import Footer from "../components/Footer";
 import LoginModal from "../components/LoginModal";
 
-function Individual() {
+function Anonymous() {
     const [showLogin, setShowLogin] = useState(false);
 
     return (
         <div className="pt-0">
             <Navbar onLoginClick={() => setShowLogin(true)} />
-            <IPageHeader />
-            <IndividualTherapy />  
+            <APageHeader />
+            <AnonymousSupport />  
             <FAQ />
             <Footer />
 
@@ -25,4 +25,4 @@ function Individual() {
     );
 }
 
-export default Individual;
+export default Anonymous;

@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes, FaChevronDown } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function Navbar({ onLoginClick }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  // Detect scroll
+  const navigate = useNavigate();
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -15,23 +18,30 @@ function Navbar({ onLoginClick }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (id) => {
-    const section = document.getElementById(id);
-    section?.scrollIntoView({ behavior: "smooth" });
-    setMenuOpen(false); // close mobile menu
-  };
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setDropdownOpen(false);
+    };
+
+    if (dropdownOpen) {
+      window.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      window.removeEventListener("click", handleClickOutside);
+    };
+  }, [dropdownOpen]);
 
   return (
     <nav
-      className={`fixed w-full top-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-stone-950 shadow-md text-white" : "bg-stone-950 text-white"
-      }`}
+      className={`fixed w-full top-0 z-50 transition-all duration-300 ${scrolled ? "bg-stone-950 shadow-md text-white" : "bg-stone-950 text-white"
+        }`}
     >
       <div className="flex justify-between items-center px-6 md:px-20 py-4">
-        
+
         {/* Logo */}
         <h1
-          onClick={() => scrollToSection("home")}
+          onClick={() => navigate("/")}
           className="text-2xl font-bold text-orange-500 cursor-pointer"
         >
           MindCare
@@ -39,19 +49,101 @@ function Navbar({ onLoginClick }) {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-10 font-semibold">
-          <button onClick={() => (window.location.href = "/")} className="hover:text-orange-500">
+
+          <button onClick={() => navigate("/")} className="hover:text-orange-500">
             Home
           </button>
 
-          <button onClick={() => scrollToSection("services")} className="hover:text-orange-500">
-            Services
-          </button>
+          {/* SERVICES DROPDOWN */}
+          <div className="relative">
 
-          <button onClick={() => (window.location.href = "/AboutUs")} className="hover:text-orange-500">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setDropdownOpen(!dropdownOpen);
+              }}
+              className="inline-flex items-center gap-2 hover:text-orange-500"
+            >
+              Services
+              <FaChevronDown
+                className={`transition-transform duration-300 ${dropdownOpen ? "rotate-180" : ""
+                  }`}
+              />
+            </button>
+
+            {/* Dropdown */}
+            {dropdownOpen && (
+              <div className="absolute top-10 left-0 bg-orange-950 text-white rounded-lg shadow-lg w-56 py-2 z-50">
+
+                <button
+                  onClick={() => {
+                    navigate("/individual-therapy");
+                    setDropdownOpen(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 hover:bg-orange-600"
+                >
+                  Individual Therapy
+                </button>
+
+                <button
+                  onClick={() => {
+                    navigate("/couples-counseling");
+                    setDropdownOpen(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 hover:bg-orange-600"
+                >
+                  Couples Counseling
+                </button>
+
+                <button
+                  onClick={() => {
+                    navigate("/stress-management");
+                    setDropdownOpen(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 hover:bg-orange-600"
+                >
+                  Stress Management
+                </button>
+
+                <button
+                  onClick={() => {
+                    navigate("/depression-therapy");
+                    setDropdownOpen(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 hover:bg-orange-600"
+                >
+                  Depression Therapy
+                </button>
+
+                <button
+                  onClick={() => {
+                    navigate("/resources");
+                    setDropdownOpen(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 hover:bg-orange-600"
+                >
+                  Mental Resources
+                </button>
+
+                <button
+                  onClick={() => {
+                    navigate("/anonymous-support");
+                    setDropdownOpen(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 hover:bg-orange-600"
+                >
+                  Anonymous Support
+                </button>
+
+              </div>
+            )}
+          </div>
+
+          <button onClick={() => navigate("/AboutUs")} className="hover:text-orange-500">
             About Us
           </button>
 
-          <button onClick={() => scrollToSection("contact")} className="hover:text-orange-500">
+          <button onClick={() => navigate("/#contact")} className="hover:text-orange-500">
             Contact
           </button>
 
@@ -61,6 +153,7 @@ function Navbar({ onLoginClick }) {
           >
             Login
           </button>
+
         </div>
 
         {/* Mobile Icon */}
@@ -72,21 +165,48 @@ function Navbar({ onLoginClick }) {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-stone-950 text-white flex flex-col items-center gap-6 py-6 transition-all duration-300">
+        <div className="md:hidden bg-stone-950 text-white flex flex-col items-center gap-4 py-6">
 
-          <button onClick={() => scrollToSection("home")} className="hover:text-orange-500">
+          <button onClick={() => navigate("/")} className="hover:text-orange-500">
             Home
           </button>
 
-          <button onClick={() => scrollToSection("services")} className="hover:text-orange-500">
-            Services
-          </button>
+          {/* Mobile Services */}
+          <div className="flex flex-col items-center gap-2">
 
-          <button onClick={() => scrollToSection("about")} className="hover:text-orange-500">
+            <p className="font-semibold">Services</p>
+
+            <button onClick={() => navigate("/individual-therapy")} className="text-sm hover:text-orange-400">
+              Individual Therapy
+            </button>
+
+            <button onClick={() => navigate("/couples-counseling")} className="text-sm hover:text-orange-400">
+              Couples Counseling
+            </button>
+
+            <button onClick={() => navigate("/stress-management")} className="text-sm hover:text-orange-400">
+              Stress Management
+            </button>
+
+            <button onClick={() => navigate("/depression-therapy")} className="text-sm hover:text-orange-400">
+              Depression Therapy
+            </button>
+
+            <button onClick={() => navigate("/resources")} className="text-sm hover:text-orange-400">
+              Mental Resources
+            </button>
+
+            <button onClick={() => navigate("/anonymous-support")} className="text-sm hover:text-orange-400">
+              Anonymous Support
+            </button>
+
+          </div>
+
+          <button onClick={() => navigate("/AboutUs")} className="hover:text-orange-500">
             About Us
           </button>
 
-          <button onClick={() => scrollToSection("contact")} className="hover:text-orange-500">
+          <button onClick={() => navigate("/Contact")} className="hover:text-orange-500">
             Contact
           </button>
 
