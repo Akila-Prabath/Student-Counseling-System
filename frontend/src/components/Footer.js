@@ -51,12 +51,12 @@ function Footer() {
           <h3 className="font-semibold text-lg mb-4 text-black">Contact</h3>
 
           <div className="flex items-start gap-2 mb-3">
-            <FaLocationDot className="text-orange-600 mt-1" />
+            <FaLocationDot className="text-black hover:text-orange-600 mt-1" />
             <p className="text-sm">10 S Main St, Kurunegala, Sri Lanka</p>
           </div>
 
           <div className="flex items-start gap-2 mb-4">
-            <MdEmail className="text-orange-600 mt-1" />
+            <MdEmail className="text-black hover:text-orange-600 mt-1" />
             <p className="text-sm">contact@mindcare.com</p>
           </div>
 

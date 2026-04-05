@@ -24,7 +24,7 @@ function Navbar({ onLoginClick }) {
   return (
     <nav
       className={`fixed w-full top-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-stone-950 shadow-md text-white" : "bg-transparent text-white"
+        scrolled ? "bg-stone-950 shadow-md text-white" : "bg-stone-950 text-white"
       }`}
     >
       <div className="flex justify-between items-center px-6 md:px-20 py-4">
@@ -39,7 +39,7 @@ function Navbar({ onLoginClick }) {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-10 font-semibold">
-          <button onClick={() => scrollToSection("home")} className="hover:text-orange-500">
+          <button onClick={() => (window.location.href = "/")} className="hover:text-orange-500">
             Home
           </button>
 
@@ -47,7 +47,7 @@ function Navbar({ onLoginClick }) {
             Services
           </button>
 
-          <button onClick={() => scrollToSection("about")} className="hover:text-orange-500">
+          <button onClick={() => (window.location.href = "/AboutUs")} className="hover:text-orange-500">
             About Us
           </button>
 

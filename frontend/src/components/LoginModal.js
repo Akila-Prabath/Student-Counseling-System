@@ -51,7 +51,7 @@ function LoginModal({ isOpen, onClose }) {
 
         {/* Title */}
         <h2 className="text-3xl font-bold mb-2 text-center">
-          Welcome Back to MindCare 👋
+          Welcome Back to MindCare 
         </h2>
 
         <p className="text-center text-gray-500 mb-6">
@@ -72,7 +72,7 @@ function LoginModal({ isOpen, onClose }) {
           <input
             type="email"
             placeholder="Enter your email"
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             onChange={(e) => setEmail(e.target.value)}
             required
           />
@@ -82,7 +82,7 @@ function LoginModal({ isOpen, onClose }) {
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
               onChange={(e) => setPassword(e.target.value)}
               required
             />

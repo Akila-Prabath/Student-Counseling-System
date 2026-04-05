@@ -29,6 +29,9 @@ app.use("/api/resources", resourceRoutes);
 const feedbackRoutes = require("./routes/feedback.routes");
 app.use("/api/feedback", feedbackRoutes);
 
+const userRoutes = require("./routes/user.routes");
+app.use("/api/users", userRoutes);
+
 const URI = process.env.MONGODB_URI;
 
 mongoose.connect(URI)

@@ -40,7 +40,7 @@ function About() {
 
       {/* Title */}
       <h2 className="text-4xl font-bold mb-4">
-        Our <span className="text-orange-600 italic font-semibold">Team</span>
+        Our <span className="text-orange-600 italic font-semibold">Specialist</span>
       </h2>
 
       {/* Subtitle */}
@@ -68,7 +68,7 @@ function About() {
             </div>
 
             {/* Bottom Overlay Card */}
-            <div className="bg-orange-200 rounded-xl px-6 py-5 shadow-lg -mt-16 relative z-10 mx-4">
+            <div className="bg-orange-100 rounded-xl px-6 py-5 shadow-lg -mt-16 relative z-10 mx-4">
 
               <h3 className="text-lg font-semibold">{member.name}</h3>
               <p className="text-gray-700 text-sm mb-3">{member.role}</p>
@@ -76,15 +76,15 @@ function About() {
               {/* Social Icons */}
               <div className="flex justify-center gap-3">
 
-                <div className="bg-white p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                <div className="bg-white p-2 rounded-md cursor-pointer hover:bg-orange-300">
                   <FaFacebookF />
                 </div>
 
-                <div className="bg-white p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                <div className="bg-white p-2 rounded-md cursor-pointer hover:bg-orange-300">
                   <FaTwitter />
                 </div>
 
-                <div className="bg-white p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                <div className="bg-white p-2 rounded-md cursor-pointer hover:bg-orange-300">
                   <FaInstagram />
                 </div>
 

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import individualImg from "../assets/services/individual.jpg";
 import couplesImg from "../assets/services/couples.jpg";
 import stressImg from "../assets/services/stress.jpg";
@@ -7,55 +8,70 @@ import anonymousImg from "../assets/services/anonymous.jpg";
 
 function Services() {
 
+  const navigate = useNavigate();
+
   const services = [
     {
       title: "Individual Therapy",
-      desc: "One-on-one sessions with licensed professionals to help you understand your thoughts, manage emotions, and improve your mental well-being.",
-      img: individualImg
+      desc: "One-on-one sessions with licensed professionals to help you understand your thoughts and improve mental well-being.",
+      img: individualImg,
+      path: "/individual-therapy"
     },
     {
       title: "Couples Counseling",
-      desc: "Strengthen your relationship through guided conversations, conflict resolution strategies, and emotional support for both partners.",
-      img: couplesImg
+      desc: "Strengthen your relationship through guided conversations and emotional support.",
+      img: couplesImg,
+      path: "/couples-counseling"
     },
     {
       title: "Stress Management",
-      desc: "Learn practical techniques to reduce stress, improve focus, and maintain a balanced and healthy lifestyle.",
-      img: stressImg
+      desc: "Learn practical techniques to reduce stress and improve focus.",
+      img: stressImg,
+      path: "/stress-management"
     },
     {
       title: "Depression Therapy",
-      desc: "Receive compassionate support and evidence-based therapy to overcome depression and regain control of your life.",
-      img: depressionImg
+      desc: "Receive compassionate support to overcome depression.",
+      img: depressionImg,
+      path: "/depression-therapy"
     },
     {
       title: "Mental Resources",
-      desc: "Explore curated articles, videos, and self-help guides to support your mental health journey and personal growth.",
-      img: resourcesImg
+      desc: "Explore articles, videos, and guides for mental health.",
+      img: resourcesImg,
+      path: "/resources"
     },
     {
       title: "Anonymous Support",
-      desc: "Share your concerns freely and get guidance without revealing your identity in a safe and confidential environment.",
-      img: anonymousImg
+      desc: "Share concerns freely in a safe and confidential environment.",
+      img: anonymousImg,
+      path: "/anonymous-support"
     }
   ];
 
   return (
-    <div id="services" className="py-20 px-10 bg-orange-100 text-center">
+    <div id="services" className="py-20 px-10 bg-white text-center">
 
-      <div className="inline-block bg-orange-300 text-orange-950 px-4 py-1 rounded-full text-sm mb-4 text-center">Our Services</div>
-      <h3 className="text-black text-4xl font-bold mb-10 text-center">Therapist & <span className="text-orange-600 italic font-semibold">Treatments</span></h3>
+      <div className="inline-block bg-orange-300 text-orange-950 px-4 py-1 rounded-full text-sm mb-4">
+        Our Services
+      </div>
+
+      <h3 className="text-black text-4xl font-bold mb-10">
+        Therapist & <span className="text-orange-600 italic font-semibold">Treatments</span>
+      </h3>
+
       <p className="text-gray-600 max-w-2xl mx-auto mb-10">
-        We offer a range of mental health services including therapy, counseling, and support systems to help you live a healthier and happier life.
+        We offer a range of mental health services including therapy, counseling, and support systems.
       </p>
+
       <div className="grid md:grid-cols-3 gap-10 text-left">
 
         {services.map((service, index) => (
 
-          <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition overflow-hidden group">
+          <div key={index} className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition overflow-hidden group">
 
-            {/* Image + Hover */}
-            <div className="relative h-80 overflow-hidden group">
+            {/* Image */}
+            <div className="relative h-80 overflow-hidden">
 
               <img
                 src={service.img}
@@ -63,9 +79,13 @@ function Services() {
                 className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
               />
 
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+              {/* Hover Button */}
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
 
-                <button className="bg-orange-600 text-white px-5 py-2 rounded-lg font-semibold transform scale-90 group-hover:scale-100 transition duration-300">
+                <button
+                  onClick={() => navigate(service.path)}
+                  className="bg-orange-600 text-white px-5 py-2 rounded-lg font-semibold transform scale-90 group-hover:scale-100 transition duration-300"
+                >
                   Get Started
                 </button>
 
