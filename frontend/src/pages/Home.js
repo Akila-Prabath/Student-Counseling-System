@@ -8,9 +8,11 @@ import About from "../components/About";
 import FAQ from "../components/FAQ";
 import Footer from "../components/Footer";
 import LoginModal from "../components/LoginModal";
+import RegisterModal from "../components/RegisterModal";
 
 function Home() {
   const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
 
   return (
     <div className="pt-0">
@@ -23,9 +25,24 @@ function Home() {
       <FAQ />
       <Footer />
 
+      {/* Login Modal */}
       <LoginModal
         isOpen={showLogin}
         onClose={() => setShowLogin(false)}
+        onSwitchToRegister={() => {
+          setShowLogin(false);
+          setShowRegister(true);
+        }}
+      />
+
+      {/* Register Modal */}
+      <RegisterModal
+        isOpen={showRegister}
+        onClose={() => setShowRegister(false)}
+        onSwitchToLogin={() => {
+          setShowRegister(false);
+          setShowLogin(true);
+        }}
       />
     </div>
   );

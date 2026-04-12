@@ -1,8 +1,11 @@
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 function Footer() {
+  const navigate = useNavigate();
+
   return (
     <footer id="contact" className="bg-stone-300 text-gray-800 pt-16 pb-6 px-6 md:px-20">
 
@@ -26,12 +29,12 @@ function Footer() {
         <div>
           <h3 className="font-semibold text-lg mb-4 text-black">Our Services</h3>
           <ul className="space-y-2 text-sm">
-            <li className="hover:text-orange-600 cursor-pointer">Individual Therapy</li>
-            <li className="hover:text-orange-600 cursor-pointer">Couples Counseling</li>
-            <li className="hover:text-orange-600 cursor-pointer">Mental Resources</li>
-            <li className="hover:text-orange-600 cursor-pointer">Stress Management</li>
-            <li className="hover:text-orange-600 cursor-pointer">Depression Therapy</li>
-            <li className="hover:text-orange-600 cursor-pointer">Anonymous Support</li>
+            <li className="hover:text-orange-600 cursor-pointer"> <span onClick={() => navigate("/individual-therapy")}> Individual Therapy </ span> </li>
+            <li className="hover:text-orange-600 cursor-pointer"> <span onClick={() => navigate("/couples-counseling")}> Couples Counseling </ span> </li>
+            <li className="hover:text-orange-600 cursor-pointer"> <span onClick={() => navigate("/resources")}> Mental Resources </ span> </li>
+            <li className="hover:text-orange-600 cursor-pointer"> <span onClick={() => navigate("/stress-management")}> Stress Management </ span> </li>
+            <li className="hover:text-orange-600 cursor-pointer"> <span onClick={() => navigate("/depression-therapy")}> Depression Therapy </ span> </li>
+            <li className="hover:text-orange-600 cursor-pointer"> <span onClick={() => navigate("/anonymous-support")}> Anonymous Support </ span> </li>
           </ul>
         </div>
 
@@ -39,10 +42,10 @@ function Footer() {
         <div>
           <h3 className="font-semibold text-lg mb-4 text-black">Quick Links</h3>
           <ul className="space-y-2 text-sm">
-            <li className="hover:text-orange-600 cursor-pointer">Home</li>
+            <li className="hover:text-orange-600 cursor-pointer"> <span onClick={() => navigate("/")}> Home </ span></li>
             <li className="hover:text-orange-600 cursor-pointer">Services</li>
-            <li className="hover:text-orange-600 cursor-pointer">About Us</li>
-            <li className="hover:text-orange-600 cursor-pointer">Contact Us</li>
+            <li className="hover:text-orange-600 cursor-pointer"> <span onClick={() => navigate("/AboutUs")}> About Us </ span></li>
+            <li className="hover:text-orange-600 cursor-pointer"> <span onClick={() => navigate("/Contact")}> Contact Us </ span></li>
           </ul>
         </div>
 

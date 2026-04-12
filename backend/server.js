@@ -32,6 +32,12 @@ app.use("/api/feedback", feedbackRoutes);
 const userRoutes = require("./routes/user.routes");
 app.use("/api/users", userRoutes);
 
+const contactRoutes = require("./routes/contact.routes");
+app.use("/api/contact", contactRoutes);
+
+const adminRoutes = require("./routes/admin.routes");
+app.use("/api/admin", adminRoutes);
+
 const URI = process.env.MONGODB_URI;
 
 mongoose.connect(URI)

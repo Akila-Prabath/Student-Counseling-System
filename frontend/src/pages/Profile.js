@@ -1,20 +1,15 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
-import BPageHeader from "../components/BPageHeader";
-import Appointment from "../components/Appointment";
-import FAQ from "../components/FAQ";
+//import BPageHeader from "../components/BPageHeader";
 import Footer from "../components/Footer";
 import LoginModal from "../components/LoginModal";
 
-function BookAppointment() {
+function Profile() {
     const [showLogin, setShowLogin] = useState(false);
 
     return (
         <div className="pt-0">
             <Navbar onLoginClick={() => setShowLogin(true)} />
-            <BPageHeader />
-            <Appointment />  
-            <FAQ />
             <Footer />
 
             <LoginModal
@@ -25,4 +20,4 @@ function BookAppointment() {
     );
 }
 
-export default BookAppointment;
+export default Profile;

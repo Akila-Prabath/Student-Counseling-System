@@ -1,14 +1,17 @@
 import { useState } from "react";
 import API from "../services/api";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
-function LoginModal({ isOpen, onClose }) {
-  const [email, setEmail] = useState("");
+function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
 
@@ -18,7 +21,7 @@ function LoginModal({ isOpen, onClose }) {
     setError("");
 
     try {
-      const res = await API.post("/auth/login", { email, password });
+      const res = await API.post("/auth/login", { username, password });
 
       // Save token
       localStorage.setItem("token", res.data.token);
@@ -26,7 +29,13 @@ function LoginModal({ isOpen, onClose }) {
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
       // Redirect based on role (optional)
-      window.location.href = "/dashboard";
+      const role = res.data.user.role;
+
+      if (role === "admin") {
+      window.location.href = "/admin";
+    } else {
+      window.location.href = "/";
+    }
 
       onClose();
 
@@ -51,7 +60,7 @@ function LoginModal({ isOpen, onClose }) {
 
         {/* Title */}
         <h2 className="text-3xl font-bold mb-2 text-center">
-          Welcome Back to MindCare 
+          Welcome Back to MindCare
         </h2>
 
         <p className="text-center text-gray-500 mb-6">
@@ -68,12 +77,12 @@ function LoginModal({ isOpen, onClose }) {
         {/* Form */}
         <form onSubmit={handleLogin} className="space-y-4">
 
-          {/* Email */}
+          {/* Username */}
           <input
-            type="email"
-            placeholder="Enter your email"
+            type="text"
+            placeholder="Enter your username"
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
 
@@ -113,6 +122,17 @@ function LoginModal({ isOpen, onClose }) {
         >
           ✕
         </button>
+
+        {/* Register Redirect */}
+        <p className="text-center text-sm text-gray-600 mt-4">
+          Don’t have an account?{" "}
+          <span
+            className="text-orange-600 font-semibold cursor-pointer hover:underline"
+            onClick={onSwitchToRegister}
+          >
+            Register
+          </span>
+        </p>
 
       </div>
     </div>

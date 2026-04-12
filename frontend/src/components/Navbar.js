@@ -9,6 +9,32 @@ function Navbar({ onLoginClick }) {
 
   const navigate = useNavigate();
 
+  const [user, setUser] = useState(null);
+
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  useEffect(() => {
+    const updateUser = () => {
+      const storedUser = localStorage.getItem("user");
+      setUser(storedUser ? JSON.parse(storedUser) : null);
+    };
+
+    updateUser();
+
+    window.addEventListener("storage", updateUser);
+
+    return () => window.removeEventListener("storage", updateUser);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("role");
+
+    setUser(null);
+    navigate("/");
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -20,17 +46,16 @@ function Navbar({ onLoginClick }) {
 
   useEffect(() => {
     const handleClickOutside = () => {
-      setDropdownOpen(false);
+      setDropdownOpen(false); // services
+      setProfileOpen(false);  // profile
     };
 
-    if (dropdownOpen) {
-      window.addEventListener("click", handleClickOutside);
-    }
+    window.addEventListener("click", handleClickOutside);
 
     return () => {
       window.removeEventListener("click", handleClickOutside);
     };
-  }, [dropdownOpen]);
+  }, []);
 
   return (
     <nav
@@ -73,14 +98,14 @@ function Navbar({ onLoginClick }) {
 
             {/* Dropdown */}
             {dropdownOpen && (
-              <div className="absolute top-10 left-0 bg-orange-950 text-white rounded-lg shadow-lg w-56 py-2 z-50">
+              <div className="absolute top-10 left-0 mt-2 bg-orange-950 text-white rounded-lg shadow-lg w-56 py-2 z-50">
 
                 <button
                   onClick={() => {
                     navigate("/individual-therapy");
                     setDropdownOpen(false);
                   }}
-                  className="block w-full text-left px-4 py-2 hover:bg-orange-600"
+                  className="block w-full text-left px-4 py-2 hover:bg-orange-700"
                 >
                   Individual Therapy
                 </button>
@@ -90,7 +115,7 @@ function Navbar({ onLoginClick }) {
                     navigate("/couples-counseling");
                     setDropdownOpen(false);
                   }}
-                  className="block w-full text-left px-4 py-2 hover:bg-orange-600"
+                  className="block w-full text-left px-4 py-2 hover:bg-orange-700"
                 >
                   Couples Counseling
                 </button>
@@ -100,7 +125,7 @@ function Navbar({ onLoginClick }) {
                     navigate("/stress-management");
                     setDropdownOpen(false);
                   }}
-                  className="block w-full text-left px-4 py-2 hover:bg-orange-600"
+                  className="block w-full text-left px-4 py-2 hover:bg-orange-700"
                 >
                   Stress Management
                 </button>
@@ -110,7 +135,7 @@ function Navbar({ onLoginClick }) {
                     navigate("/depression-therapy");
                     setDropdownOpen(false);
                   }}
-                  className="block w-full text-left px-4 py-2 hover:bg-orange-600"
+                  className="block w-full text-left px-4 py-2 hover:bg-orange-700"
                 >
                   Depression Therapy
                 </button>
@@ -120,7 +145,7 @@ function Navbar({ onLoginClick }) {
                     navigate("/resources");
                     setDropdownOpen(false);
                   }}
-                  className="block w-full text-left px-4 py-2 hover:bg-orange-600"
+                  className="block w-full text-left px-4 py-2 hover:bg-orange-700"
                 >
                   Mental Resources
                 </button>
@@ -130,7 +155,7 @@ function Navbar({ onLoginClick }) {
                     navigate("/anonymous-support");
                     setDropdownOpen(false);
                   }}
-                  className="block w-full text-left px-4 py-2 hover:bg-orange-600"
+                  className="block w-full text-left px-4 py-2 hover:bg-orange-700"
                 >
                   Anonymous Support
                 </button>
@@ -143,16 +168,93 @@ function Navbar({ onLoginClick }) {
             About Us
           </button>
 
-          <button onClick={() => navigate("/#contact")} className="hover:text-orange-500">
+          <button onClick={() => navigate("/Contact")} className="hover:text-orange-500">
             Contact
           </button>
 
-          <button
-            onClick={onLoginClick}
-            className="bg-orange-950 text-white px-5 py-2 rounded-lg hover:bg-orange-600 transition"
-          >
-            Login
-          </button>
+          {!user ? (
+            <button
+              onClick={onLoginClick}
+              className="bg-orange-950 text-white px-5 py-2 rounded-lg hover:bg-orange-600 transition"
+            >
+              Login
+            </button>
+          ) : (
+            <div className="flex items-center gap-4">
+
+              {/* LOGIN BUTTON (always separate) */}
+              {!user ? (
+                <button
+                  onClick={onLoginClick}
+                  className="bg-orange-950 text-white px-5 py-2 rounded-lg hover:bg-orange-600 transition"
+                >
+                  Login
+                </button>
+              ) : (
+                <div className="flex items-center gap-4">
+
+                  <div className="relative">
+
+                    <img
+                      src={user.profilePic || "https://i.pravatar.cc/40"}
+                      alt="profile"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setProfileOpen(!profileOpen);
+                      }}
+                      className="w-10 h-10 rounded-full cursor-pointer border-2 border-white hover:scale-105 transition"
+                    />
+
+                    {profileOpen && (
+                      <div className="absolute right-0 mt-3 bg-orange-950 text-white rounded-xl shadow-lg w-56 py-3 z-50">
+
+                        {/* 🔥 Welcome text */}
+                        <p className="px-5 pb-2 text-sm text-gray-300">
+                          Welcome back,{" "}
+                          <span className="text-orange-400 font-semibold">
+                            {user.name}
+                          </span>
+                        </p>
+
+                        <hr className="border-gray-700 mb-2" />
+
+                        <button
+                          onClick={() => {
+                            navigate("/profile");
+                            setProfileOpen(false);
+                          }}
+                          className="block w-full text-left px-5 py-2 hover:bg-orange-600"
+                        >
+                          Your Profile
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            navigate("/Appointment");
+                            setProfileOpen(false);
+                          }}
+                          className="block w-full text-left px-5 py-2 hover:bg-orange-600"
+                        >
+                          Appointments
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            handleLogout();
+                            setProfileOpen(false);
+                          }}
+                          className="block w-full text-left px-5 py-2 hover:bg-orange-600 text-red-300"
+                        >
+                          Logout
+                        </button>
+
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
         </div>
 
@@ -171,9 +273,8 @@ function Navbar({ onLoginClick }) {
             Home
           </button>
 
-          {/* Mobile Services */}
+          {/* Services */}
           <div className="flex flex-col items-center gap-2">
-
             <p className="font-semibold">Services</p>
 
             <button onClick={() => navigate("/individual-therapy")} className="text-sm hover:text-orange-400">
@@ -199,7 +300,6 @@ function Navbar({ onLoginClick }) {
             <button onClick={() => navigate("/anonymous-support")} className="text-sm hover:text-orange-400">
               Anonymous Support
             </button>
-
           </div>
 
           <button onClick={() => navigate("/AboutUs")} className="hover:text-orange-500">
@@ -210,12 +310,54 @@ function Navbar({ onLoginClick }) {
             Contact
           </button>
 
-          <button
-            onClick={onLoginClick}
-            className="bg-orange-950 px-5 py-2 rounded-lg hover:bg-orange-600 transition"
-          >
-            Login
-          </button>
+          {/* 🔥 AUTH SECTION */}
+          {!user ? (
+            <button
+              onClick={onLoginClick}
+              className="bg-orange-950 px-6 py-2 rounded-lg hover:bg-orange-600 transition mt-2"
+            >
+              Login
+            </button>
+          ) : (
+            <div className="flex flex-col items-center gap-3 mt-3">
+
+              {/* Avatar */}
+              <img
+                src="https://i.pravatar.cc/60"
+                alt="profile"
+                className="w-14 h-14 rounded-full border-2 border-white"
+              />
+
+              {/* Menu Items */}
+              <button
+                onClick={() => navigate("/profile")}
+                className="hover:text-orange-400"
+              >
+                Your Profile
+              </button>
+
+              <button
+                onClick={() => navigate("/appointments")}
+                className="hover:text-orange-400"
+              >
+                Appointments
+              </button>
+
+              <button
+                onClick={() => navigate("/resources")}
+                className="hover:text-orange-400"
+              >
+                Resources
+              </button>
+
+              <button
+                onClick={handleLogout}
+                className="text-red-400 hover:text-red-500"
+              >
+                Logout
+              </button>
+            </div>
+          )}
 
         </div>
       )}

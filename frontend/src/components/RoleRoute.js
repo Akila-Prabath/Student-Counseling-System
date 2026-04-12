@@ -1,9 +1,13 @@
 import { Navigate } from "react-router-dom";
 
-function RoleRoute({ children, allowedRoles }) {
-  const role = localStorage.getItem("role");
+function RoleRoute({ children, role }) {
+  const userRole = localStorage.getItem("role");
 
-  if (!allowedRoles.includes(role)) {
+  if (!userRole) {
+    return <Navigate to="/" />;
+  }
+
+  if (userRole !== role) {
     return <Navigate to="/" />;
   }
 

@@ -7,9 +7,9 @@ const router = express.Router();
 // student book appointment
 router.post("/", protect, authorize("student"), async (req, res) => {
     try {
-        const { counselorId, date, timeSlot, reason } = req.body;
+        const { counselorId, serviceType, date, timeSlot, reason } = req.body;
 
-        if (!counselorId || !date || !timeSlot || !reason) {
+        if (!counselorId || !serviceType || !date || !timeSlot || !reason) {
             return res.status(400).json({
                 message: "Please provide all required fields"
             });
@@ -18,6 +18,7 @@ router.post("/", protect, authorize("student"), async (req, res) => {
         const newAppointment = new Appointment({
             student: req.user.id,
             counselor: counselorId,
+            serviceType,
             date,
             timeSlot,
             reason

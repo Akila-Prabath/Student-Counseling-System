@@ -1,6 +1,8 @@
 import heroBg from "../assets/health.jpg";
+import { useNavigate } from "react-router-dom";
 
 function Hero({ onLoginClick }) {
+  const navigate = useNavigate();
   return (
     <div
       id="home"
@@ -26,6 +28,7 @@ function Hero({ onLoginClick }) {
           Talk to professionals, find support, and improve your mental wellness today.
         </p>
 
+        <div className="flex inline-block gap-10">
         {/* Button */}
         <button
           onClick={onLoginClick}
@@ -33,7 +36,14 @@ function Hero({ onLoginClick }) {
         >
           Get Started
         </button>
-
+        {/* CTA Button */}
+        <button
+            onClick={() => navigate("/book")}
+            className="bg-orange-950 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition shadow-md"
+          >
+            Book Appointment
+        </button>
+        </ div>
       </div>
 
     </div>
