@@ -37,7 +37,7 @@ function App() {
         <Route path="/anonymous-support" element={< Anonymous />} />
         <Route path="/Contact" element={<Contact />} />
 
-        
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/students" element={<Students />} />
         <Route path="/admin/students/add" element={<Students />} />
 
