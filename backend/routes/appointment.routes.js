@@ -4,101 +4,163 @@ const { protect, authorize } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
-// student book appointment
+
+// 🔥 STUDENT: Book appointment
 router.post("/", protect, authorize("student"), async (req, res) => {
-    try {
-        const { counselorId, serviceType, date, timeSlot, reason } = req.body;
+  try {
+    const { counselorId, serviceType, date, timeSlot, reason } = req.body;
 
-        if (!counselorId || !serviceType || !date || !timeSlot || !reason) {
-            return res.status(400).json({
-                message: "Please provide all required fields"
-            });
-        }
-
-        const newAppointment = new Appointment({
-            student: req.user.id,
-            counselor: counselorId,
-            serviceType,
-            date,
-            timeSlot,
-            reason
-        });
-
-        await newAppointment.save();
-
-        res.status(201).json({
-            message: "Appointment booked successfully",
-            appointment: newAppointment
-        });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server error" });
+    if (!counselorId || !serviceType || !date || !timeSlot || !reason) {
+      return res.status(400).json({
+        message: "Please provide all required fields"
+      });
     }
+
+    const newAppointment = new Appointment({
+      student: req.user.id,
+      counselor: counselorId,
+      serviceType,
+      date,
+      timeSlot,
+      reason
+    });
+
+    await newAppointment.save();
+
+    res.status(201).json({
+      message: "Appointment booked successfully",
+      appointment: newAppointment
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
-//counselor views their appointments
+
+// 🔥 ADMIN: Get ALL appointments (IMPORTANT)
+router.get("/", protect, authorize("admin"), async (req, res) => {
+  try {
+    const appointments = await Appointment.find()
+      .populate("student", "name email")
+      .populate("counselor", "name email")
+      .sort({ createdAt: -1 });
+
+    res.json(appointments);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to fetch appointments" });
+  }
+});
+
+
+// 🔥 COUNSELOR: View own appointments
 router.get("/counselor", protect, authorize("counselor"), async (req, res) => {
-    try {
-        const appointments = await Appointment.find({
-            counselor:req.user.id
-        }).populate("student", "name email");
+  try {
+    const appointments = await Appointment.find({
+      counselor: req.user.id
+    })
+      .populate("student", "name email")
+      .sort({ createdAt: -1 });
 
-        res.json(appointments);
-    } catch (error) {
-        res.status(500).json({ message: "Server error" });
-    }
+    res.json(appointments);
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
-//student views their appointments
+
+// 🔥 STUDENT: View own appointments
 router.get("/student", protect, authorize("student"), async (req, res) => {
-    try {
-        const appointments = await Appointment.find({
-            student: req.user.id
-        }).populate("counselor", "name email");
+  try {
+    const appointments = await Appointment.find({
+      student: req.user.id
+    })
+      .populate("counselor", "name email")
+      .sort({ createdAt: -1 });
 
-        res.json(appointments);
+    res.json(appointments);
 
-    } catch (error) {
-        res.status(500).json({ message: "Server error" });
-    }
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
-//counselor approves or rejects appointment
+
+// 🔥 COUNSELOR: Update status
 router.put("/:id/status", protect, authorize("counselor"), async (req, res) => {
-    try{
-        const { status } = req.body;
+  try {
+    const { status } = req.body;
 
-        if (!["approved", "rejected", "completed"].includes(status)) {
-            return res.status(400).json({
-                message: "Invalid status value"
-            });
-        }
-
-        const appointment = await Appointment.findById(req.params.id);
-
-        if (!appointment) {
-            return res.status(404).json({
-                message: "Appointment not found"
-            });
-        }
-
-        if (appointment.counselor.toString() !== req.user.id) {
-            return res.status(403).json({
-                message: "Not authorized to update this appointment"
-            });
-        }
-
-        appointment.status = status;
-        await appointment.save();
-
-        res.json({
-            message: "Appointment status updated",
-            appointment
-        });
-    } catch (error) {
-        res.status(500).json({ message: "Server error" });
+    if (!["approved", "rejected", "completed"].includes(status)) {
+      return res.status(400).json({
+        message: "Invalid status value"
+      });
     }
+
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res.status(404).json({
+        message: "Appointment not found"
+      });
+    }
+
+    if (appointment.counselor.toString() !== req.user.id) {
+      return res.status(403).json({
+        message: "Not authorized to update this appointment"
+      });
+    }
+
+    appointment.status = status;
+    await appointment.save();
+
+    res.json({
+      message: "Appointment status updated",
+      appointment
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
+
+
+// 🔥 ADMIN: Update status (optional but powerful)
+router.put("/admin/:id/status", protect, authorize("admin"), async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    if (!["pending", "approved", "rejected", "completed"].includes(status)) {
+      return res.status(400).json({
+        message: "Invalid status value"
+      });
+    }
+
+    const appointment = await Appointment.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+
+    if (!appointment) {
+      return res.status(404).json({
+        message: "Appointment not found"
+      });
+    }
+
+    res.json({
+      message: "Status updated by admin",
+      appointment
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 module.exports = router;

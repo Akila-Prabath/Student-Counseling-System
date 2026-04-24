@@ -1,14 +1,17 @@
 import { Navigate } from "react-router-dom";
 
-function RoleRoute({ children, role }) {
-  const userRole = localStorage.getItem("role");
+function RoleRoute({ children, allowedRoles }) {
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  if (!userRole) {
-    return <Navigate to="/" />;
+  if (!user || !user.role) {
+    return <Navigate to="/login" replace />;
   }
 
-  if (userRole !== role) {
-    return <Navigate to="/" />;
+  // 🔥 normalize role (VERY IMPORTANT)
+  const userRole = user.role.toLowerCase();
+
+  if (!allowedRoles.includes(userRole)) {
+    return <Navigate to="/" replace />;
   }
 
   return children;

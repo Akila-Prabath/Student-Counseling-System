@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FaBars, FaTimes, FaChevronDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
+
 function Navbar({ onLoginClick }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -196,13 +197,21 @@ function Navbar({ onLoginClick }) {
                   <div className="relative">
 
                     <img
-                      src={user.profilePic || "https://i.pravatar.cc/40"}
+                      src={
+                        user?.profilePic
+                          ? `http://localhost:8070/uploads/${user.profilePic}`
+                          : "https://i.pravatar.cc/40"
+                      }
+                      onError={(e) => {
+                        e.target.src = "https://i.pravatar.cc/40";
+                      }}
                       alt="profile"
+                      loading="lazy"
                       onClick={(e) => {
                         e.stopPropagation();
                         setProfileOpen(!profileOpen);
                       }}
-                      className="w-10 h-10 rounded-full cursor-pointer border-2 border-white hover:scale-105 transition"
+                      className="w-10 h-10 rounded-full object-cover cursor-pointer border-2 border-white hover:scale-105 transition"
                     />
 
                     {profileOpen && (
@@ -323,9 +332,17 @@ function Navbar({ onLoginClick }) {
 
               {/* Avatar */}
               <img
-                src="https://i.pravatar.cc/60"
+                src={
+                  user?.profilePic
+                    ? `http://localhost:8070/uploads/${user.profilePic}`
+                    : "https://i.pravatar.cc/60"
+                }
+                onError={(e) => {
+                  e.target.src = "https://i.pravatar.cc/60";
+                }}
                 alt="profile"
-                className="w-14 h-14 rounded-full border-2 border-white"
+                loading="lazy"
+                className="w-14 h-14 rounded-full border-2 border-white object-cover"
               />
 
               {/* Menu Items */}

@@ -2,63 +2,80 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-
+const upload = require("../middleware/upload");
 const router = express.Router();
 
 
 // ================= REGISTER =================
-router.post("/register", async (req, res) => {
-    try {
-        const { name, username, email, password } = req.body;
+router.post("/register", upload.single("profilePic"), async (req, res) => {
+  try {
+    const { name, username, email, password, role, specialization, experience, phone, bio } = req.body;
 
-        // Validation
-        if (!name || !username || !email || !password) {
-            return res.status(400).json({
-                message: "Please provide all required fields"
-            });
-        }
-
-        // Check existing email
-        const emailExists = await User.findOne({ email });
-        if (emailExists) {
-            return res.status(409).json({
-                message: "Email already exists"
-            });
-        }
-
-        // Check existing username
-        const usernameExists = await User.findOne({ username });
-        if (usernameExists) {
-            return res.status(409).json({
-                message: "Username already taken"
-            });
-        }
-
-        // Hash password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        // Create user
-        const newUser = new User({
-            name,
-            username,
-            email,
-            password: hashedPassword,
-            role: "student"
-        });
-
-        await newUser.save();
-
-        res.status(201).json({
-            message: "User registered successfully"
-        });
-
-    } catch (error) {
-        console.error("FULL ERROR:", error);
-        res.status(500).json({
-            message: "Server error"
-        });
+    // 🔍 Validation
+    if (!name || !username || !email || !password) {
+      return res.status(400).json({
+        message: "Please provide all required fields"
+      });
     }
+
+    // 🔍 Check existing email
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
+      return res.status(409).json({
+        message: "Email already exists"
+      });
+    }
+
+    // 🔍 Check existing username
+    const usernameExists = await User.findOne({ username });
+    if (usernameExists) {
+      return res.status(409).json({
+        message: "Username already taken"
+      });
+    }
+
+    // 🔐 Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // 🖼️ Handle image (if uploaded)
+    const profilePic = req.file ? req.file.filename : null;
+
+    // 👤 Create user
+    const newUser = new User({
+      name,
+      username,
+      email,
+      password: hashedPassword,
+      role: role || "student", // default student
+      profilePic,
+      specialization,
+      experience,
+      phone,
+      bio
+    });
+
+    await newUser.save();
+
+    res.status(201).json({
+      message: "User registered successfully",
+      user: newUser
+    });
+
+  } catch (error) {
+    console.error("FULL ERROR:", error);
+
+    // 🔥 Multer error handling
+    if (error.message === "Only images allowed") {
+      return res.status(400).json({
+        message: "Only image files are allowed"
+      });
+    }
+
+    res.status(500).json({
+      message: "Server error"
+    });
+  }
 });
 
 
@@ -120,7 +137,8 @@ router.post("/login", async (req, res) => {
                 name: user.name,
                 username: user.username,
                 email: user.email,
-                role: user.role
+                role: user.role,
+                profilePic: user.profilePic
             }
         });
 

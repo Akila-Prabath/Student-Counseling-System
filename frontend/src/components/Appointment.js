@@ -4,7 +4,7 @@ import bgImg from "../assets/appointment/appointment.jpg";
 
 function BookAppointment() {
   const [form, setForm] = useState({
-    counselorID: "",
+    counselorId: "",
     serviceType: "",
     date: "",
     timeSlot: "",
@@ -37,7 +37,7 @@ function BookAppointment() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.serviceType || !form.counselorID || !form.date || !form.timeSlot) {
+    if (!form.serviceType || !form.counselorId || !form.date || !form.timeSlot) {
       return setMessage("❌ Please fill all required fields");
     }
 
@@ -47,7 +47,7 @@ function BookAppointment() {
       setMessage(res.data.message || "✅ Appointment booked successfully!");
 
       setForm({
-        counselorID: "",
+        counselorId: "",
         serviceType: "",
         date: "",
         timeSlot: "",
@@ -174,8 +174,8 @@ function BookAppointment() {
                 className="w-full mt-1 p-3 rounded-lg bg-stone-300 cursor-pointer flex justify-between items-center"
               >
                 <span>
-                  {form.counselorID
-                    ? counselors.find(c => c._id === form.counselorID)?.name
+                  {form.counselorId
+                    ? counselors.find(c => c._id === form.counselorId)?.name
                     : "Select Counselor"}
                 </span>
 
@@ -193,7 +193,7 @@ function BookAppointment() {
                     <div
                       key={c._id}
                       onClick={() => {
-                        setForm({ ...form, counselorID: c._id });
+                        setForm({ ...form, counselorId: c._id });
                         setCounselorOpen(false);
                       }}
                       className="px-4 py-2 hover:bg-orange-600 hover:text-white cursor-pointer transition"

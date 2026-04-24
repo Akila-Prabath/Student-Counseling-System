@@ -38,6 +38,8 @@ app.use("/api/contact", contactRoutes);
 const adminRoutes = require("./routes/admin.routes");
 app.use("/api/admin", adminRoutes);
 
+app.use("/uploads", express.static("uploads"));
+
 const URI = process.env.MONGODB_URI;
 
 mongoose.connect(URI)

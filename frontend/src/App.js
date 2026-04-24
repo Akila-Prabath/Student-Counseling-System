@@ -12,14 +12,21 @@ import Anonymous from "./pages/Anonymous";
 import Contact from "./pages/Contact";
 import Profile from "./pages/Profile";
 
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import Students from "./pages/admin/Students";
-import Counselors from "./pages/admin/Counselors";
-import AdminAppointments from "./pages/admin/Appointments";
-
 import ProtectedRoute from "./components/ProtectedRoute";
 import RoleRoute from "./components/RoleRoute";
 import BookAppointment from "./pages/BookAppointment";
+
+import AdminDashboard from "./pages/admin/AdminDashboard";
+//import Students from "./pages/admin/Students";
+import AddStudent from "./pages/admin/AddStudent";
+import ViewStudents from "./pages/admin/ViewStudents";
+import EditStudent from "./pages/admin/EditStudent";
+import AddCounselor from "./pages/admin/AddCounselor";
+import ViewCounselors from './pages/admin/ViewCounselors';
+import EditCounselor from './pages/admin/EditCounselor';
+import AdminAppointments from "./pages/admin/Appointments";
+
+
 
 function App() {
   return (
@@ -38,13 +45,19 @@ function App() {
         <Route path="/Contact" element={<Contact />} />
 
         <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/students" element={<Students />} />
-        <Route path="/admin/students/add" element={<Students />} />
-
-        <Route path="/admin/counselors" element={<Counselors />} />
-        <Route path="/admin/counselors/add" element={<Counselors />} />
-
         
+        <Route path="/admin/students/add" element={<AddStudent />} />
+        <Route path="/admin/students" element={<ViewStudents />} />
+        <Route path="/admin/students/edit/:id" element={<EditStudent />} />
+
+        <Route path="/admin/counselors/add" element={<AddCounselor />} />
+        <Route path="/admin/counselors" element={<ViewCounselors />} />
+        <Route path="/admin/counselors/edit/:id" element={<EditCounselor />} />
+
+        <Route path="/admin/appointments" element={<AdminAppointments />} />
+
+
+
         {/* Protected */}
         <Route
           path="/Appointment"
@@ -75,7 +88,7 @@ function App() {
           }
         />
 
-          <Route
+        <Route
           path="/admin"
           element={
             <ProtectedRoute>

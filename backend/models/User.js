@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
             required: true,
             unique: true,
         },
-        
+
         email: {
             type: String,
             required: true,
@@ -30,6 +30,9 @@ const userSchema = new mongoose.Schema(
             default: "student"
         },
 
+        profilePic: {
+            type: String
+        },
         faculty: {
             type: String
         },
@@ -39,6 +42,22 @@ const userSchema = new mongoose.Schema(
         },
 
         profileImage: {
+            type: String
+        },
+
+        specialization: {
+            type: String
+        },
+
+        experience: { 
+            type: String
+        },
+        
+        phone: {
+            type: String
+        },
+
+        bio: {
             type: String
         }
     },
