@@ -86,4 +86,6 @@ router.put("/:id", upload.single("profilePic"), async (req, res) => {
   }
 });
 
+
+
 module.exports = router;

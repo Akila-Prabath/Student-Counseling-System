@@ -50,13 +50,17 @@ function ViewStudents() {
   };
 
   return (
-    <div className="flex bg-gray-50 min-h-screen">
+    <div className="flex bg-gradient-to-br from-orange-50 to-orange-300 dark:from-gray-900 dark:to-gray-800 min-h-screen">
 
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
       <div className={`${collapsed ? "ml-20" : "ml-64"} w-full p-6 transition-all duration-300`}>
 
-        <AdminHeader />
+        <AdminHeader
+
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+        />
 
         <h2 className="text-2xl font-bold mt-6 mb-6">
           All Students
@@ -131,8 +135,8 @@ function ViewStudents() {
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
               className={`px-3 py-1 rounded ${currentPage === 1
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-gray-200 hover:bg-gray-300"
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-gray-200 hover:bg-gray-300"
                 }`}
             >
               Prev
@@ -144,8 +148,8 @@ function ViewStudents() {
                 key={i}
                 onClick={() => setCurrentPage(i + 1)}
                 className={`px-3 py-1 rounded ${currentPage === i + 1
-                    ? "bg-orange-600 text-white"
-                    : "bg-gray-200 hover:bg-gray-300"
+                  ? "bg-orange-600 text-white"
+                  : "bg-gray-200 hover:bg-gray-300"
                   }`}
               >
                 {i + 1}
@@ -159,8 +163,8 @@ function ViewStudents() {
               }
               disabled={currentPage === totalPages}
               className={`px-3 py-1 rounded ${currentPage === totalPages
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-gray-200 hover:bg-gray-300"
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-gray-200 hover:bg-gray-300"
                 }`}
             >
               Next

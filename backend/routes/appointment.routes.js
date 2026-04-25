@@ -162,5 +162,14 @@ router.put("/admin/:id/status", protect, authorize("admin"), async (req, res) =>
   }
 });
 
+router.delete("/:id", protect, authorize("admin"), async (req, res) => {
+  try {
+    await Appointment.findByIdAndDelete(req.params.id);
+    res.json({ message: "Appointment deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Delete failed" });
+  }
+});
 
 module.exports = router;

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Sidebar from "../../components/admin/Sidebar";
 import AdminHeader from "../../components/admin/AdminHeader";
 import API from "../../services/api";
+import { FaTrash } from "react-icons/fa";
 
 function Appointments() {
   const [appointments, setAppointments] = useState([]);
@@ -20,6 +21,25 @@ function Appointments() {
     }
   };
 
+  // 🔥 UPDATE STATUS
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      await API.put(`/appointments/admin/${id}/status`, {
+        status: newStatus
+      });
+
+      // 🔥 update UI instantly
+      setAppointments((prev) =>
+        prev.map((a) =>
+          a._id === id ? { ...a, status: newStatus } : a
+        )
+      );
+
+    } catch (error) {
+      console.error("Failed to update status");
+    }
+  };
+
   // 🎨 Status color
   const getStatusColor = (status) => {
     switch (status) {
@@ -34,14 +54,33 @@ function Appointments() {
     }
   };
 
+  // 🔥 DELETE APPOINTMENT
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this appointment?");
+    if (!confirmDelete) return;
+
+    try {
+      await API.delete(`/appointments/${id}`);
+
+      // 🔥 remove from UI instantly
+      setAppointments((prev) =>
+        prev.filter((a) => a._id !== id)
+      );
+
+    } catch (error) {
+      console.error("Delete failed");
+      alert("❌ Failed to delete appointment");
+    }
+  };
+
   return (
-    <div className="flex bg-gray-50 min-h-screen">
+    <div className="flex bg-gradient-to-br from-orange-50 to-orange-300 dark:from-gray-900 dark:to-gray-800 min-h-screen">
 
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
-      <div className={`${collapsed ? "ml-20" : "ml-64"} w-full p-6`}>
+      <div className={`${collapsed ? "ml-20" : "ml-64"} w-full p-6 transition-all duration-300`}>
 
-        <AdminHeader />
+        <AdminHeader collapsed={collapsed} setCollapsed={setCollapsed} />
 
         <h2 className="text-2xl font-bold mt-6 mb-6">
           All Appointments
@@ -58,6 +97,7 @@ function Appointments() {
                 <th>Counselor</th>
                 <th>Date</th>
                 <th>Status</th>
+                <th className="text-center">Actions</th>
               </tr>
             </thead>
 
@@ -88,13 +128,32 @@ function Appointments() {
                     </span>
                   </td>
 
-                  {/* STATUS */}
+                  {/* 🔥 STATUS DROPDOWN */}
                   <td>
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(a.status)}`}
+                    <select
+                      value={a.status}
+                      onChange={(e) =>
+                        handleStatusChange(a._id, e.target.value)
+                      }
+                      className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(a.status)}`}
                     >
-                      {a.status}
-                    </span>
+                      <option value="pending">Pending</option>
+                      <option value="approved">Approved</option>
+                      <option value="rejected">Rejected</option>
+                      <option value="completed">Completed</option>
+                    </select>
+                  </td>
+
+                  {/* 🔥 ACTIONS */}
+                  <td className="text-center">
+
+                    <button
+                      onClick={() => handleDelete(a._id)}
+                      className="text-red-500 hover:text-red-700 text-sm font-semibold"
+                    >
+                      <FaTrash />
+                    </button>
+
                   </td>
 
                 </tr>

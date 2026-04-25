@@ -5,14 +5,18 @@ import {
   FaUserTie,
   FaCalendar,
   FaSignOutAlt,
-  FaChevronDown
+  FaChevronDown,
+  FaHome
 } from "react-icons/fa";
+import { FaFile, FaMessage } from "react-icons/fa6";
+import { useEffect } from "react";
 
 function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
   const [openMenu, setOpenMenu] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-
+  const isStudentsActive = location.pathname.startsWith("/admin/students");
+  const isCounselorActive = location.pathname.startsWith("/admin/counselors");
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? "" : menu);
   };
@@ -21,6 +25,15 @@ function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
     localStorage.clear();
     navigate("/");
   };
+
+  useEffect(() => {
+    if (isStudentsActive) {
+      setOpenMenu("students");
+    }
+    if (isCounselorActive) {
+      setOpenMenu("counselors");
+    }
+  }, [location.pathname]);
 
   return (
     <>
@@ -34,187 +47,184 @@ function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
 
       {/* 🔥 SIDEBAR */}
       <div
-        className={`fixed top-0 left-0 h-screen bg-white dark:bg-gray-900 border-r z-50
-        transition-all duration-300
-
+        className={`fixed top-0 left-0 h-screen z-50 transition-all duration-300
         ${collapsed ? "w-20" : "w-64"}
-
-        ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
-        md:translate-x-0
-      `}
+        ${mobileOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0
+         bg-gradient-to-b from-orange-50 to-white dark:from-gray-900 dark:to-gray-800
+        border-r border-orange-100 dark:border-gray-700`}
       >
         <div className="p-5">
 
-          {/* 🔥 MOBILE CLOSE */}
-          <button
-            className="md:hidden mb-4 text-xl"
-            onClick={() => setMobileOpen(false)}
-          >
-            ✕
-          </button>
-
-          {/* 🔥 COLLAPSE BUTTON */}
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="mb-6 p-2 rounded-lg bg-gray-100 hover:bg-gray-200"
-          >
-            ☰
-          </button>
-
           {/* 🔥 LOGO */}
-          <h1 className="text-xl font-bold mb-10 text-orange-600">
+          <h1 className="text-xl font-semibold mb-8 text-orange-600 tracking-tight">
             {collapsed ? "MC" : "MindCare"}
           </h1>
 
-          {/* 🔥 DASHBOARD */}
-          <div
-            onClick={() => navigate("/admin")}
-            className={`relative flex items-center gap-3 p-2 rounded-lg cursor-pointer group
-            ${
-              location.pathname === "/admin"
-                ? "bg-orange-200 text-orange-800"
-                : "hover:bg-gray-100 dark:hover:bg-gray-800"
-            }
-          `}
-          >
-            {location.pathname === "/admin" && (
-              <span className="absolute left-0 top-0 h-full w-1 bg-orange-600 rounded-r"></span>
-            )}
+          {/* 🔥 MENU */}
+          <div className="space-y-2">
 
-            <FaUser />
-            {!collapsed && <span>Dashboard</span>}
+            {/* ITEM */}
+            {[
+              { name: "Dashboard", icon: <FaUser />, path: "/admin" },
+              { name: "Appointments", icon: <FaCalendar />, path: "/admin/appointments" },
+              { name: "Resources", icon: <FaFile />, path: "/admin/resources" },
+              { name: "Messages", icon: <FaMessage />, path: "/admin/messages" },
+            ].map((item) => {
+              const active = location.pathname === item.path;
 
-            {collapsed && (
-              <span className="absolute left-14 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100">
-                Dashboard
-              </span>
-            )}
-          </div>
+              return (
+                <div
+                  key={item.name}
+                  onClick={() => navigate(item.path)}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer transition-all
+            ${active
+                      ? "bg-orange-100 text-orange-600 shadow-sm"
+                      : "text-gray-600 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-gray-700"
+                    }`}
+                >
+                  {/* ICON BOX */}
+                  <div
+                    className={`w-9 h-9 flex items-center justify-center rounded-lg
+              ${active ? "bg-orange-200" : "bg-gray-100 dark:bg-gray-700"}`}
+                  >
+                    {item.icon}
+                  </div>
 
-          {/* 🔥 STUDENTS */}
-          <div className="mt-4">
-            <div
-              onClick={() => toggleMenu("students")}
-              className={`relative flex items-center justify-between p-2 rounded-lg cursor-pointer group
-              ${
-                location.pathname.startsWith("/admin/students")
-                  ? "bg-orange-200 text-orange-800"
-                  : "hover:bg-gray-100 dark:hover:bg-gray-800"
-              }
-            `}
-            >
-              {location.pathname.startsWith("/admin/students") && (
-                <span className="absolute left-0 top-0 h-full w-1 bg-orange-600 rounded-r"></span>
-              )}
+                  {!collapsed && (
+                    <span className="font-medium text-sm">{item.name}</span>
+                  )}
+                </div>
+              );
+            })}
 
-              <div className="flex items-center gap-3">
-                <FaUser />
-                {!collapsed && <span>Students</span>}
+            {/* 🔥 DROPDOWN MENUS */}
+
+            {/* STUDENTS */}
+            <div>
+              <div
+                onClick={() => toggleMenu("students")}
+                className={`flex items-center justify-between px-3 py-2 rounded-xl cursor-pointer transition
+                  ${isStudentsActive
+                    ? "bg-orange-100 text-orange-600"
+                    : "hover:bg-orange-50 dark:hover:bg-gray-700"
+                  }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`w-9 h-9 flex items-center justify-center rounded-lg 
+                  ${isStudentsActive ? "bg-orange-200" : "bg-gray-100 dark:bg-gray-700"}`}>
+                    <FaUser />
+                  </div>
+                  {!collapsed && <span className="text-sm font-medium">Students</span>}
+                </div>
+
+                {!collapsed && (
+                  <FaChevronDown
+                    className={`transition ${openMenu === "students" ? "rotate-180" : ""}`}
+                  />
+                )}
               </div>
 
-              {!collapsed && (
-                <FaChevronDown
-                  className={`transition ${
-                    openMenu === "students" ? "rotate-180" : ""
-                  }`}
-                />
-              )}
+              {!collapsed && openMenu === "students" && (
+                <div className="ml-10 mt-2 space-y-1 text-sm">
+                  <div
+                    onClick={() => navigate("/admin/students")}
+                    className={`px-3 py-2 rounded-lg cursor-pointer
+                    ${location.pathname === "/admin/students"
+                        ? "bg-orange-100 text-orange-600"
+                        : "hover:bg-orange-50"
+                      }`}
+                  >
+                    All Students
+                  </div>
 
-              {collapsed && (
-                <span className="absolute left-14 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100">
-                  Students
-                </span>
+                  <div
+                    onClick={() => navigate("/admin/students/add")}
+                    className={`px-3 py-2 rounded-lg cursor-pointer
+                      ${location.pathname === "/admin/students/add"
+                        ? "bg-orange-100 text-orange-600"
+                        : "hover:bg-orange-50"
+                      }`}
+                  >
+                    Add Student
+                  </div>
+                </div>
               )}
             </div>
 
-            {!collapsed && openMenu === "students" && (
-              <div className="ml-6 mt-3 space-y-1 text-sm">
-                <div
-                  onClick={() => navigate("/admin/students")}
-                  className="px-3 py-2 rounded-lg hover:bg-orange-50 cursor-pointer"
-                >
-                  All Students
-                </div>
-                <div
-                  onClick={() => navigate("/admin/students/add")}
-                  className="px-3 py-2 rounded-lg hover:bg-orange-50 cursor-pointer"
-                >
-                  Add Student
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* 🔥 COUNSELORS */}
-          <div className="mt-4">
-            <div
-              onClick={() => toggleMenu("counselors")}
-              className={`relative flex items-center justify-between p-2 rounded-lg cursor-pointer group
-              ${
-                location.pathname.startsWith("/admin/counselors")
-                  ? "bg-orange-200 text-orange-800"
-                  : "hover:bg-gray-100 dark:hover:bg-gray-800"
-              }
-            `}
-            >
-              {location.pathname.startsWith("/admin/counselors") && (
-                <span className="absolute left-0 top-0 h-full w-1 bg-orange-600 rounded-r"></span>
-              )}
-
-              <div className="flex items-center gap-3">
-                <FaUserTie />
-                {!collapsed && <span>Counselors</span>}
-              </div>
-
-              {!collapsed && (
-                <FaChevronDown
-                  className={`transition ${
-                    openMenu === "counselors" ? "rotate-180" : ""
+            {/* COUNSELORS */}
+            <div>
+              <div
+                onClick={() => toggleMenu("counselors")}
+                className={`flex items-center justify-between px-3 py-2 rounded-xl cursor-pointer transition
+                  ${isCounselorActive
+                    ? "bg-orange-100 text-orange-600"
+                    : "hover:bg-orange-50 dark:hover:bg-gray-700"
                   }`}
-                />
-              )}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`w-9 h-9 flex items-center justify-center rounded-lg 
+                  ${isCounselorActive ? "bg-orange-200" : "bg-gray-100 dark:bg-gray-700"}`}>
+                    <FaUserTie />
+                  </div>
+                  {!collapsed && <span className="text-sm font-medium">Counselors</span>}
+                </div>
 
-              {collapsed && (
-                <span className="absolute left-14 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100">
-                  Counselors
-                </span>
+                {!collapsed && (
+                  <FaChevronDown
+                    className={`transition ${openMenu === "counselors" ? "rotate-180" : ""}`}
+                  />
+                )}
+              </div>
+
+              {!collapsed && openMenu === "counselors" && (
+                <div className="ml-10 mt-2 space-y-1 text-sm">
+                  <div
+                    onClick={() => navigate("/admin/counselors")}
+                    className={`px-3 py-2 rounded-lg cursor-pointer
+                      ${location.pathname === "/admin/counselors"
+                        ? "bg-orange-100 text-orange-600"
+                        : "hover:bg-orange-50"
+                      }`}
+                  >
+                    All Counselors
+                  </div>
+
+                  <div
+                    onClick={() => navigate("/admin/counselors/add")}
+                    className={`px-3 py-2 rounded-lg cursor-pointer
+                      ${location.pathname === "/admin/counselors/add"
+                        ? "bg-orange-100 text-orange-600"
+                        : "hover:bg-orange-50"
+                      }`}
+                  >
+                    Add Counselor
+                  </div>
+                </div>
               )}
             </div>
 
-            {!collapsed && openMenu === "counselors" && (
-              <div className="ml-6 mt-3 space-y-1 text-sm">
-                <div
-                  onClick={() => navigate("/admin/counselors")}
-                  className="px-3 py-2 rounded-lg hover:bg-orange-50 cursor-pointer"
-                >
-                  All Counselors
-                </div>
-                <div
-                  onClick={() => navigate("/admin/counselors/add")}
-                  className="px-3 py-2 rounded-lg hover:bg-orange-50 cursor-pointer"
-                >
-                  Add Counselor
-                </div>
-              </div>
-            )}
           </div>
 
-          {/* 🔥 APPOINTMENTS */}
-          <div
-            onClick={() => navigate("/admin/appointments")}
-            className="flex items-center gap-3 mt-5 p-2 rounded-lg hover:bg-gray-100 cursor-pointer group"
-          >
-            <FaCalendar />
-            {!collapsed && <span>Appointments</span>}
-          </div>
 
-          {/* 🔥 LOGOUT */}
-          <div
-            onClick={handleLogout}
-            className="flex items-center gap-3 mt-6 p-2 rounded-lg hover:bg-red-100 text-red-500 cursor-pointer"
-          >
-            <FaSignOutAlt />
-            {!collapsed && <span>Logout</span>}
+          {/* 🔥 BOTTOM ACTIONS */}
+          <div className="mt-10 pt-6 border-t border-orange-100 dark:border-gray-700 space-y-2">
+
+            <div
+              onClick={() => navigate("/")}
+              className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-orange-50 cursor-pointer"
+            >
+              <FaHome />
+              {!collapsed && <span className="text-sm">Home</span>}
+            </div>
+
+            <div
+              onClick={handleLogout}
+              className="flex items-center gap-3 px-3 py-2 rounded-xl text-red-500 hover:bg-red-50 cursor-pointer"
+            >
+              <FaSignOutAlt />
+              {!collapsed && <span className="text-sm">Logout</span>}
+            </div>
+
           </div>
 
         </div>

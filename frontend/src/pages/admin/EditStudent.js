@@ -105,13 +105,16 @@ function EditStudent() {
   };
 
   return (
-    <div className="flex bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div className="flex bg-gradient-to-br from-orange-50 to-orange-300 dark:from-gray-900 dark:to-gray-800 min-h-screen">
 
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
       <div className={`${collapsed ? "ml-20" : "ml-64"} w-full p-6 transition-all duration-300`}>
 
-        <AdminHeader />
+        <AdminHeader
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+        />
 
         <h2 className="ext-2xl font-bold mt-6 mb-6 dark:text-white">
           Edit Student

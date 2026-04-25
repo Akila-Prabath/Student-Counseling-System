@@ -61,13 +61,17 @@ function ViewCounselors() {
   };
 
   return (
-    <div className="flex bg-gray-50 min-h-screen">
+    <div className="flex bg-gradient-to-br from-orange-50 to-orange-300 dark:from-gray-900 dark:to-gray-800 min-h-screen">
 
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
       <div className={`${collapsed ? "ml-20" : "ml-64"} w-full p-6 transition-all duration-300`}>
 
-        <AdminHeader />
+        <AdminHeader
+
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+        />
 
         <div className="flex justify-between items-center mt-6 mb-6">
           <h2 className="text-2xl font-bold">All Counselors</h2>
@@ -171,8 +175,8 @@ function ViewCounselors() {
                 key={i}
                 onClick={() => setCurrentPage(i + 1)}
                 className={`px-3 py-1 rounded ${currentPage === i + 1
-                    ? "bg-orange-600 text-white"
-                    : "bg-gray-200 hover:bg-gray-300"
+                  ? "bg-orange-600 text-white"
+                  : "bg-gray-200 hover:bg-gray-300"
                   }`}
               >
                 {i + 1}

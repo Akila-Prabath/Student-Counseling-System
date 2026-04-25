@@ -1,14 +1,31 @@
-function StatsCard({ title, value, growth }) {
+function StatsCard({ title, value, growth, icon, color }) {
+  const positive = growth >= 0;
+
   return (
-    <div className="bg-white dark:bg-gray-800 text-black dark:text-white p-6 rounded-2xl shadow-sm hover:shadow-md transition">
+    <div className="premium-card p-5 hover:-translate-y-1 transition">
 
-      <p className="text-gray-500 text-sm">{title}</p>
+      {/* ICON */}
+      <div className={`w-10 h-10 flex items-center justify-center rounded-lg ${color}`}>
+        {icon}
+      </div>
 
-      <div className="flex justify-between items-center mt-2">
-        <h2 className="text-3xl font-bold">{value}</h2>
+      {/* TITLE */}
+      <p className="text-xs text-gray-500 mt-3 uppercase tracking-wide">
+        {title}
+      </p>
 
-        <span className="text-sm text-green-500 bg-green-100 px-2 py-1 rounded">
-          +{growth}%
+      {/* VALUE */}
+      <div className="flex justify-between items-end mt-2">
+        <h2 className="text-3xl font-semibold tracking-tight">
+          {value}
+        </h2>
+
+        <span className={`text-xs px-2 py-1 rounded-md ${
+          positive
+            ? "bg-green-100 text-green-600"
+            : "bg-red-100 text-red-600"
+        }`}>
+          {positive ? "+" : ""}{growth}%
         </span>
       </div>
 

@@ -25,6 +25,7 @@ import AddCounselor from "./pages/admin/AddCounselor";
 import ViewCounselors from './pages/admin/ViewCounselors';
 import EditCounselor from './pages/admin/EditCounselor';
 import AdminAppointments from "./pages/admin/Appointments";
+import AdminProfile from "./pages/admin/AdminProfile";
 
 
 
@@ -55,6 +56,7 @@ function App() {
         <Route path="/admin/counselors/edit/:id" element={<EditCounselor />} />
 
         <Route path="/admin/appointments" element={<AdminAppointments />} />
+        <Route path="/admin/profile" element={<AdminProfile />} />
 
 
 

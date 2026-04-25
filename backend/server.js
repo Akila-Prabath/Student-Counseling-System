@@ -35,10 +35,10 @@ app.use("/api/users", userRoutes);
 const contactRoutes = require("./routes/contact.routes");
 app.use("/api/contact", contactRoutes);
 
+app.use("/uploads", express.static("uploads"));
+
 const adminRoutes = require("./routes/admin.routes");
 app.use("/api/admin", adminRoutes);
-
-app.use("/uploads", express.static("uploads"));
 
 const URI = process.env.MONGODB_URI;
 
