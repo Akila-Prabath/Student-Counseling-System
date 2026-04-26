@@ -24,3 +24,56 @@ code {
   hover:shadow-md
   transition;
 }
+
+/* 🔥 CLEAN MODERN CALENDAR */
+
+.custom-calendar {
+  border: none !important;
+  width: 100%;
+  font-family: inherit;
+}
+
+.react-calendar__tile {
+  border-radius: 10px;
+  padding: 10px 0;
+  transition: 0.2s;
+}
+
+.react-calendar__tile:hover {
+  background: #f3f4f6;
+}
+
+.react-calendar__tile--active {
+  background: #5b3df5 !important;
+  color: white;
+  border-radius: 50%;
+}
+
+.react-calendar__navigation {
+  display: none; /* 🔥 hide top navigation */
+}
+
+.react-calendar__month-view__weekdays {
+  text-transform: uppercase;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.react-calendar__month-view__days__day {
+  font-weight: 500;
+  color: #374151;
+}
+
+/* smooth modern scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}

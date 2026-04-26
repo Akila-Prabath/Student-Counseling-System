@@ -26,6 +26,9 @@ import ViewCounselors from './pages/admin/ViewCounselors';
 import EditCounselor from './pages/admin/EditCounselor';
 import AdminAppointments from "./pages/admin/Appointments";
 import AdminProfile from "./pages/admin/AdminProfile";
+import Resource from "./pages/admin/Resources.js";
+import Messages from "./pages/admin/Messages.js";
+import Contacts from "./pages/admin/Contacts.js";
 
 
 
@@ -57,7 +60,9 @@ function App() {
 
         <Route path="/admin/appointments" element={<AdminAppointments />} />
         <Route path="/admin/profile" element={<AdminProfile />} />
-
+        <Route path="/admin/resources" element={<Resource />} />
+        <Route path="/admin/messages" element={<Messages />} />
+        <Route path="/admin/contacts" element={<Contacts />} />
 
 
         {/* Protected */}

@@ -8,7 +8,7 @@ import {
   FaChevronDown,
   FaHome
 } from "react-icons/fa";
-import { FaFile, FaMessage } from "react-icons/fa6";
+import { FaFile, FaMessage, FaPhone } from "react-icons/fa6";
 import { useEffect } from "react";
 
 function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
@@ -69,6 +69,7 @@ function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
               { name: "Appointments", icon: <FaCalendar />, path: "/admin/appointments" },
               { name: "Resources", icon: <FaFile />, path: "/admin/resources" },
               { name: "Messages", icon: <FaMessage />, path: "/admin/messages" },
+              { name: "Contacts", icon: <FaPhone />, path: "/admin/contacts" },
             ].map((item) => {
               const active = location.pathname === item.path;
 
@@ -106,7 +107,7 @@ function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
                 className={`flex items-center justify-between px-3 py-2 rounded-xl cursor-pointer transition
                   ${isStudentsActive
                     ? "bg-orange-100 text-orange-600"
-                    : "hover:bg-orange-50 dark:hover:bg-gray-700"
+                    : "text-gray-600 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-gray-700"
                   }`}
               >
                 <div className="flex items-center gap-3">
@@ -158,7 +159,7 @@ function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
                 className={`flex items-center justify-between px-3 py-2 rounded-xl cursor-pointer transition
                   ${isCounselorActive
                     ? "bg-orange-100 text-orange-600"
-                    : "hover:bg-orange-50 dark:hover:bg-gray-700"
+                    : "text-gray-600 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-gray-700"
                   }`}
               >
                 <div className="flex items-center gap-3">

@@ -246,6 +246,16 @@ function Navbar({ onLoginClick }) {
                         >
                           Appointments
                         </button>
+                        
+                        <button
+                          onClick={() => {
+                            navigate("/resources");
+                            setProfileOpen(false);
+                          }}
+                          className="block w-full text-left px-5 py-2 hover:bg-orange-600"
+                        >
+                          Resources
+                        </button>
 
                         <button
                           onClick={() => {

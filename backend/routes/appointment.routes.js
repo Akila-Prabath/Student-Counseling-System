@@ -43,8 +43,8 @@ router.post("/", protect, authorize("student"), async (req, res) => {
 router.get("/", protect, authorize("admin"), async (req, res) => {
   try {
     const appointments = await Appointment.find()
-      .populate("student", "name email")
-      .populate("counselor", "name email")
+      .populate("student", "name email profilePic")
+      .populate("counselor", "name email profilePic")
       .sort({ createdAt: -1 });
 
     res.json(appointments);
@@ -62,7 +62,7 @@ router.get("/counselor", protect, authorize("counselor"), async (req, res) => {
     const appointments = await Appointment.find({
       counselor: req.user.id
     })
-      .populate("student", "name email")
+      .populate("student", "name email profilePic")
       .sort({ createdAt: -1 });
 
     res.json(appointments);
@@ -79,7 +79,7 @@ router.get("/student", protect, authorize("student"), async (req, res) => {
     const appointments = await Appointment.find({
       student: req.user.id
     })
-      .populate("counselor", "name email")
+      .populate("counselor", "name email profilePic")
       .sort({ createdAt: -1 });
 
     res.json(appointments);
@@ -162,13 +162,62 @@ router.put("/admin/:id/status", protect, authorize("admin"), async (req, res) =>
   }
 });
 
-router.delete("/:id", protect, authorize("admin"), async (req, res) => {
+router.delete("/:id", protect, async (req, res) => {
   try {
-    await Appointment.findByIdAndDelete(req.params.id);
-    res.json({ message: "Appointment deleted successfully" });
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res.status(404).json({ message: "Appointment not found" });
+    }
+
+    // ✅ ADMIN can delete ANY
+    if (req.user.role === "admin") {
+      await appointment.deleteOne();
+      return res.json({ message: "Deleted by admin" });
+    }
+
+    // ✅ STUDENT can delete own only
+    if (req.user.role === "student") {
+      if (appointment.student.toString() !== req.user.id) {
+        return res.status(403).json({ message: "Not authorized" });
+      }
+
+      await appointment.deleteOne();
+      return res.json({ message: "Deleted by student" });
+    }
+
+    // ❌ others not allowed
+    return res.status(403).json({ message: "Not allowed" });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Delete failed" });
+  }
+});
+
+router.put("/:id/reschedule", protect, authorize("student"), async (req, res) => {
+  try {
+    const { counselorId, date, timeSlot } = req.body;
+
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) return res.status(404).json({ message: "Not found" });
+
+    if (appointment.student.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not allowed" });
+    }
+
+    appointment.counselor = counselorId;
+    appointment.date = date;
+    appointment.timeSlot = timeSlot;
+    appointment.status = "pending"; // reset
+
+    await appointment.save();
+
+    res.json({ message: "Rescheduled successfully" });
+
+  } catch (err) {
+    res.status(500).json({ message: "Error" });
   }
 });
 
