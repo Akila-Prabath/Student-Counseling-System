@@ -50,7 +50,7 @@ function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
         className={`fixed top-0 left-0 h-screen z-50 transition-all duration-300
         ${collapsed ? "w-20" : "w-64"}
         ${mobileOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0
-         bg-gradient-to-b from-orange-50 to-white dark:from-gray-900 dark:to-gray-800
+         bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800
         border-r border-orange-100 dark:border-gray-700`}
       >
         <div className="p-5">

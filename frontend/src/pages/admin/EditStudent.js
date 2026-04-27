@@ -105,7 +105,7 @@ function EditStudent() {
   };
 
   return (
-    <div className="flex bg-gradient-to-br from-orange-50 to-orange-300 dark:from-gray-900 dark:to-gray-800 min-h-screen">
+    <div className="flex bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 min-h-screen">
 
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
