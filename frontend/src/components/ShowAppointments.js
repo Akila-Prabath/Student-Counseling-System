@@ -122,8 +122,8 @@ function ShowAppointments() {
             onClick={() => setFilter(f)}
             className={`px-4 py-1 rounded-full text-sm capitalize transition
               ${filter === f
-                ? "bg-orange-500 text-white"
-                : "bg-white border text-gray-600 hover:bg-gray-100"
+                ? "bg-orange-600 text-white"
+                : "bg-white border text-gray-600 hover:bg-gray-200"
               }`}
           >
             {f}
@@ -206,14 +206,14 @@ function ShowAppointments() {
 
                     <button
                       onClick={() => cancelAppointment(appt._id)}
-                      className="flex-1 bg-red-500 text-white py-1 rounded-lg text-sm hover:bg-red-600"
+                      className="flex-1 bg-red-700 text-white py-1 rounded-lg text-sm hover:bg-red-800"
                     >
                       Cancel
                     </button>
 
                     <button
                       onClick={() => reschedule(appt)}
-                      className="flex-1 bg-blue-500 text-white py-1 rounded-lg text-sm hover:bg-blue-600"
+                      className="flex-1 bg-blue-700 text-white py-1 rounded-lg text-sm hover:bg-blue-800"
                     >
                       Reschedule
                     </button>

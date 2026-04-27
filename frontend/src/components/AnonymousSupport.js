@@ -24,26 +24,34 @@ function AnonymousSupport() {
 
           {/* Description */}
           <p className="text-gray-600 mb-8 leading-relaxed max-w-lg">
-            Anonymous support allows you to share your concerns and 
-            seek guidance without revealing your identity. This service is 
-            ideal for individuals who may feel hesitant or uncomfortable discussing 
-            sensitive issues openly. By providing a safe and confidential environment, 
-            we ensure that you can express yourself freely and receive professional advice 
+            Anonymous support allows you to share your concerns and
+            seek guidance without revealing your identity. This service is
+            ideal for individuals who may feel hesitant or uncomfortable discussing
+            sensitive issues openly. By providing a safe and confidential environment,
+            we ensure that you can express yourself freely and receive professional advice
             without fear of judgment, helping you take the first step toward healing.</p>
 
           {/* CTA Button */}
-          <button
-            onClick={() => navigate("/book")}
-            className="bg-orange-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition shadow-md"
-          >
-            Book Appointment
-          </button>
+          <div className="flex gap-10">
+            <button
+              onClick={() => navigate("/Messages")}
+              className="bg-orange-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition shadow-md"
+            >
+              Send Message
+            </button>
 
+            <button
+              onClick={() => navigate("/book")}
+              className="bg-orange-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition shadow-md"
+            >
+              Book Appointment
+            </button>
+          </div>
         </div>
 
-         {/* Right IMAGES GRID */}
+        {/* Right IMAGES GRID */}
         <div className="flex justify-center md:justify-end">
-          
+
           <img src={anonymous} alt="" className="w-full h-[260px] md:h-[320px] object-cover object-top rounded-2xl shadow-lg" />
         </div>
 

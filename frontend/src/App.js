@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Appointments from "./pages/Appointments";
+import Message from "./pages/Messages";
 import AboutUs from "./pages/AboutUs";
 import Individual from "./pages/Individual";
 import Couples from "./pages/Couples";
@@ -71,6 +72,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Appointments />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/Messages"
+          element={
+            <ProtectedRoute>
+              <Message />
             </ProtectedRoute>
           }
         />

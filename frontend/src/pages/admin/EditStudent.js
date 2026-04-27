@@ -63,7 +63,7 @@ function EditStudent() {
 
     if (!file) return;
 
-    if (file.size > 2 * 1024 * 1024) {
+    if (file.size > 10 * 1024 * 1024) {
       alert("Image must be less than 2MB");
       return;
     }

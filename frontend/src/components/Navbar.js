@@ -246,6 +246,16 @@ function Navbar({ onLoginClick }) {
                         >
                           Appointments
                         </button>
+
+                        <button
+                          onClick={() => {
+                            navigate("/Messages");
+                            setProfileOpen(false);
+                          }}
+                          className="block w-full text-left px-5 py-2 hover:bg-orange-600"
+                        >
+                          Messages
+                        </button>
                         
                         <button
                           onClick={() => {
@@ -368,6 +378,13 @@ function Navbar({ onLoginClick }) {
                 className="hover:text-orange-400"
               >
                 Appointments
+              </button>
+              
+              <button
+                onClick={() => navigate("/messages")}
+                className="hover:text-orange-400"
+              >
+                Messages
               </button>
 
               <button
