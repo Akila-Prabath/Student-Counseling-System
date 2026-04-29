@@ -27,7 +27,15 @@ const resourceSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true
-        }
+        },
+
+        visibleTo: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
+            }
+        ]
+
     },
     {
         timestamps: true

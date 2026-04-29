@@ -12,6 +12,7 @@ import Resources from "./pages/Resources";
 import Anonymous from "./pages/Anonymous";
 import Contact from "./pages/Contact";
 import Profile from "./pages/Profile";
+import AddResource from "./pages/Resource";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import RoleRoute from "./components/RoleRoute";
@@ -81,6 +82,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Message />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/Resource"
+          element={
+            <ProtectedRoute>
+              <AddResource />
             </ProtectedRoute>
           }
         />

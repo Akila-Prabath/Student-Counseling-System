@@ -259,7 +259,7 @@ function Navbar({ onLoginClick }) {
                         
                         <button
                           onClick={() => {
-                            navigate("/resources");
+                            navigate("/resource");
                             setProfileOpen(false);
                           }}
                           className="block w-full text-left px-5 py-2 hover:bg-orange-600"
@@ -388,7 +388,7 @@ function Navbar({ onLoginClick }) {
               </button>
 
               <button
-                onClick={() => navigate("/resources")}
+                onClick={() => navigate("/resource")}
                 className="hover:text-orange-400"
               >
                 Resources

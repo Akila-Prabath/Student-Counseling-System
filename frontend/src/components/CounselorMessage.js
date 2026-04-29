@@ -11,50 +11,50 @@ function CounselorMessage() {
     const [selected, setSelected] = useState(null);
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
-    const [isAnonymousChat, setIsAnonymousChat] = useState(false);
+    const [search, setSearch] = useState("");
+
+    // ✅ SINGLE SOURCE OF TRUTH
     const [anonymousMap, setAnonymousMap] = useState(() => {
         const saved = localStorage.getItem("anonymousMap");
         return saved ? JSON.parse(saved) : {};
     });
-    const isAnon = anonymousMap[selected?._id];
+
     const chatEndRef = useRef(null);
 
+    // =========================================
     // 🔥 LOAD
+    // =========================================
     useEffect(() => {
         fetchConversations();
     }, []);
 
-    useEffect(() => {
-        if (conversations.length > 0 && !selected) {
-            setSelected(conversations[0].user);
-            setIsAnonymousChat(conversations[0].isAnonymous); // 🔥 important
-            fetchMessages(conversations[0].user._id);
-        }
-    }, [conversations]);
+    // =========================================
+    // 🔥 AUTO SELECT
+    // =========================================
 
+    // =========================================
+    // 🔥 SYNC ANONYMOUS MAP
+    // =========================================
     useEffect(() => {
         if (conversations.length > 0) {
             setAnonymousMap((prev) => {
                 const updated = { ...prev };
 
                 conversations.forEach((c) => {
-                    const id = c.user._id;
-
-                    // 🔥 only set if not already stored
-                    if (!(id in updated)) {
-                        updated[id] = c.isAnonymous;
+                    if (!(c.user._id in updated)) {
+                        updated[c.user._id] = c.isAnonymous;
                     }
                 });
 
-                // 💾 save to localStorage
                 localStorage.setItem("anonymousMap", JSON.stringify(updated));
-
                 return updated;
             });
         }
     }, [conversations]);
 
+    // =========================================
     // 🔥 AUTO REFRESH
+    // =========================================
     useEffect(() => {
         const interval = setInterval(() => {
             fetchConversations();
@@ -64,6 +64,9 @@ function CounselorMessage() {
         return () => clearInterval(interval);
     }, [selected]);
 
+    // =========================================
+    // API
+    // =========================================
     const fetchConversations = async () => {
         const res = await API.get("/messages/conversations/list");
         setConversations(res.data);
@@ -74,12 +77,22 @@ function CounselorMessage() {
         setMessages(res.data);
     };
 
+    const updateAnonymous = (chat) => {
+        setAnonymousMap((prev) => {
+            const updated = { ...prev };
+
+            if (!(chat.user._id in updated)) {
+                updated[chat.user._id] = chat.isAnonymous;
+                localStorage.setItem("anonymousMap", JSON.stringify(updated));
+            }
+
+            return updated;
+        });
+    };
+
     const handleSelect = (chat) => {
         setSelected(chat.user);
-
-        // 🔥 store anonymous state ONCE
-        setIsAnonymousChat(chat.isAnonymous);
-
+        updateAnonymous(chat);
         fetchMessages(chat.user._id);
     };
 
@@ -101,110 +114,229 @@ function CounselorMessage() {
         return BASE_URL + user.profilePic;
     };
 
-    const formatTime = (date) => {
-        return new Date(date).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit"
+    // =========================================
+    // 🕒 TIME FORMAT
+    // =========================================
+    const formatChatTime = (date) => {
+        const now = new Date();
+        const msgDate = new Date(date);
+
+        const diff = now - msgDate;
+        const oneDay = 86400000;
+
+        return diff < oneDay
+            ? msgDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+            : msgDate.toLocaleDateString([], { month: "short", day: "numeric" });
+    };
+
+    // =========================================
+    // 🔍 FILTER
+    // =========================================
+    const filteredConversations = conversations.filter((c) => {
+        const isAnon = anonymousMap[c.user._id];
+        const name = isAnon ? "unknown" : c.user.name.toLowerCase();
+        const msg = c.lastMessage?.toLowerCase() || "";
+
+        return (
+            name.includes(search.toLowerCase()) ||
+            msg.includes(search.toLowerCase())
+        );
+    });
+
+    // =========================================
+    // 🎯 CURRENT CHAT ANON
+    // =========================================
+    const isAnon = selected ? anonymousMap[selected._id] : false;
+
+    const formatMessageDate = (date) => {
+        const msgDate = new Date(date);
+        const today = new Date();
+        const yesterday = new Date();
+
+        yesterday.setDate(today.getDate() - 1);
+
+        const isToday =
+            msgDate.toDateString() === today.toDateString();
+
+        const isYesterday =
+            msgDate.toDateString() === yesterday.toDateString();
+
+        if (isToday) return "Today";
+        if (isYesterday) return "Yesterday";
+
+        return msgDate.toLocaleDateString([], {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
         });
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault(); // 🚫 stop new line
+            sendMessage();
+        }
+    };
+
+    const handleInput = (e) => {
+        e.target.style.height = "auto";
+        e.target.style.height = e.target.scrollHeight + "px";
+    };
+
+    // =========================================
+    // UI
+    // =========================================
     return (
         <div className="flex h-[85vh] bg-[#efeae2] rounded-xl overflow-hidden shadow">
 
-            {/* 🔥 LEFT CHAT LIST */}
-            <div className="w-[30%] bg-white border-r overflow-y-auto">
+            {/* LEFT */}
+            <div className="w-[30%] bg-white border-r flex flex-col">
 
-                <div className="p-4 font-semibold border-b">
-                    Chats
+                {/* 🔥 FIXED HEADER */}
+                <div className="p-4 border-b sticky top-0 bg-white z-10">
+                    <h2 className="text-xl font-bold">Chats</h2>
+
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="w-full mt-3 px-3 py-2 border rounded-lg text-sm"
+                    />
                 </div>
 
-                {conversations.map((c) => {
-                    const isAnon = anonymousMap[c.user._id];
+                {/* 🔥 SCROLLABLE CHAT LIST */}
+                <div className="flex-1 overflow-y-auto">
 
-                    return (
-                        <div
-                            key={c.user._id}
-                            onClick={() => handleSelect(c)}
-                            className={`flex items-center gap-3 p-3 cursor-pointer transition
-                                ${selected?._id === c.user._id
-                                    ? "bg-gray-100"
-                                    : "hover:bg-gray-50"}`}
-                        >
-                            <div className="relative">
+                    {filteredConversations.length === 0 ? (
+                        <p className="p-4 text-sm text-gray-400">No chats found</p>
+                    ) : (
+                        filteredConversations.map((c) => {
+                            const isAnonUser =
+                                anonymousMap[c.user._id] ?? c.isAnonymous;
 
-                                <img
-                                    src={
-                                        isAnon
-                                            ? "https://i.pravatar.cc/40"
-                                            : getImage(c.user)
-                                    }
-                                    className="w-11 h-11 rounded-full object-cover"
-                                />
-                            </div>
+                            return (
+                                <div
+                                    key={c.user._id}
+                                    onClick={() => handleSelect(c)}
+                                    className={`flex items-center gap-3 p-3 cursor-pointer transition
+                                            ${selected?._id === c.user._id
+                                            ? "bg-gray-100"
+                                            : "hover:bg-gray-50"}`}
+                                >
+                                    <img
+                                        src={
+                                            isAnonUser
+                                                ? "https://i.pravatar.cc/40"
+                                                : getImage(c.user)
+                                        }
+                                        className="w-11 h-11 rounded-full"
+                                    />
 
-                            <div className="flex-1">
-                                <h4 className="text-sm font-medium">
-                                    {isAnon ? "Unknown" : c.user.name}
-                                </h4>
+                                    <div className="flex-1">
+                                        <div className="flex justify-between">
+                                            <h4 className="text-sm font-medium">
+                                                {isAnonUser ? "Unknown" : c.user.name}
+                                            </h4>
 
-                                <p className="text-xs text-gray-500 truncate">
-                                    {c.lastMessage}
-                                </p>
-                            </div>
-                        </div>
-                    );
-                })}
+                                            <span className="text-xs text-gray-400">
+                                                {formatChatTime(c.createdAt)}
+                                            </span>
+                                        </div>
+
+                                        <p className="text-xs text-gray-500 truncate">
+                                            {c.lastMessage}
+                                        </p>
+                                    </div>
+                                </div>
+                            );
+                        })
+                    )}
+
+                </div>
             </div>
 
-            {/* 🔥 RIGHT CHAT */}
+            {/* RIGHT */}
             <div className="flex-1 flex flex-col">
 
                 {!selected ? (
-                    <div className="flex items-center justify-center h-full text-gray-400">
-                        Select a chat
+                    <div className="flex flex-col items-center justify-center h-full text-center px-6 animate-fadeIn">
+
+                        {/* 💬 ICON */}
+                        <div className="text-6xl mb-4">💬</div>
+
+                        {/* TITLE */}
+                        <h2 className="text-xl font-semibold text-gray-700">
+                            Chat with students
+                        </h2>
+
+                        {/* SUBTEXT */}
+                        <p className="text-gray-500 text-sm mt-2 max-w-xs">
+                            Start conversations with students to provide guidance, support, and better treatment.
+                        </p>
+
+                        {/* OPTIONAL HINT */}
+                        <p className="text-xs text-gray-400 mt-4">
+                            Select a chat from the left to begin
+                        </p>
+
                     </div>
                 ) : (
                     <>
                         {/* HEADER */}
                         <div className="flex items-center gap-3 p-4 bg-gray-100 border-b">
-
-
                             <img
                                 src={
-                                    isAnonymousChat
+                                    isAnon
                                         ? "https://i.pravatar.cc/40"
-                                        : selected?.profilePic
-                                            ? getImage(selected)
-                                            : "https://i.pravatar.cc/40"
+                                        : getImage(selected)
                                 }
-                                className="w-10 h-10 rounded-full object-cover"
+                                className="w-10 h-10 rounded-full"
                             />
 
-                            <div>
-                                <h3 className="font-semibold">
-                                    {isAnon ? "Unknown" : selected?.name}
-                                </h3>
-
-                                <p className="text-xs text-green-500">online</p>
-                            </div>
-
+                            <h3 className="font-semibold">
+                                {isAnon ? "Unknown" : selected.name}
+                            </h3>
                         </div>
 
                         {/* MESSAGES */}
-                        <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-[#efeae2]">
+                        <div className="flex-1 overflow-y-auto p-4 space-y-2">
 
-                            {messages.map((msg) => {
+                            {messages.map((msg, index) => {
                                 const myId = user?._id || user?.id;
 
                                 const isMe =
                                     String(msg.sender?._id) === String(myId);
 
+                                const currentDate = new Date(msg.createdAt).toDateString();
+
+                                const prevDate =
+                                    index > 0
+                                        ? new Date(messages[index - 1].createdAt).toDateString()
+                                        : null;
+
+                                const showDate = currentDate !== prevDate;
+
+                                const time = new Date(msg.createdAt).toLocaleTimeString([], {
+                                    hour: "2-digit",
+                                    minute: "2-digit"
+                                });
+
                                 return (
                                     <div key={msg._id}>
 
-                                        {/* LEFT */}
+                                        {/* 📅 DATE SEPARATOR */}
+                                        {showDate && (
+                                            <div className="flex justify-center my-4">
+                                                <span className="bg-green-50 shadow text-gray-500 text-xs px-4 py-1 rounded-full">
+                                                    {formatMessageDate(msg.createdAt)}
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        {/* LEFT (RECEIVED) */}
                                         {!isMe && (
-                                            <div className="flex items-start gap-3 mb-4">
+                                            <div className="flex gap-2 mb-3">
 
                                                 <img
                                                     src={
@@ -215,34 +347,31 @@ function CounselorMessage() {
                                                     className="w-8 h-8 rounded-full"
                                                 />
 
-                                                {/* Bubble */}
-                                                <div className="bg-white px-4 py-2 rounded-2xl rounded-bl-none shadow max-w-[70%]">
+                                                <div className="bg-white px-4 py-2 rounded-2xl rounded-bl-none max-w-[70%] shadow">
+
                                                     <p className="text-sm">{msg.content}</p>
 
-                                                    <span className="text-[10px] text-gray-400 block mt-1">
-                                                        {new Date(msg.createdAt).toLocaleTimeString([], {
-                                                            hour: "2-digit",
-                                                            minute: "2-digit"
-                                                        })}
+                                                    {/* 🕒 TIME */}
+                                                    <span className="block text-[10px] text-gray-400 mt-1">
+                                                        {time}
                                                     </span>
+
                                                 </div>
 
                                             </div>
                                         )}
 
-                                        {/* RIGHT */}
+                                        {/* RIGHT (SENT) */}
                                         {isMe && (
                                             <div className="flex justify-end mb-3">
 
-                                                <div className="bg-[#d9fdd3] px-4 py-2 rounded-2xl rounded-br-none shadow max-w-[70%]">
-                                                    <p className="text-sm">{msg.content}</p>
+                                                <div className="bg-[#d9fdd3] px-4 py-2 rounded-2xl rounded-br-none max-w-[70%] shadow text-left">
 
-                                                    <span className="text-[10px] text-gray-500 block mt-1 text-right">
-                                                        {new Date(msg.createdAt).toLocaleTimeString([], {
-                                                            hour: "2-digit",
-                                                            minute: "2-digit"
-                                                        })}
-                                                    </span>
+                                                    <div className="flex items-end gap-2">
+                                                        <p>{msg.content}</p>
+                                                        <span className="text-[10px] text-gray-400">{time}</span>
+                                                    </div>
+
                                                 </div>
 
                                             </div>
@@ -256,12 +385,16 @@ function CounselorMessage() {
                         </div>
 
                         {/* INPUT */}
-                        <div className="p-3 bg-white border-t flex gap-2">
-                            <input
+                        <div className="p-3 bg-white flex gap-2 items-center">
+
+                            <textarea
+                                onInput={handleInput}
                                 value={text}
                                 onChange={(e) => setText(e.target.value)}
-                                className="flex-1 border rounded-full px-4 py-2 text-sm"
+                                onKeyDown={handleKeyDown}
                                 placeholder="Type a message..."
+                                rows={1}
+                                className="flex-1 border rounded-2xl px-4 py-2 text-sm resize-none outline-none focus:ring-2 focus:ring-green-400"
                             />
 
                             <button
@@ -270,9 +403,11 @@ function CounselorMessage() {
                             >
                                 <FaPaperPlane />
                             </button>
+
                         </div>
                     </>
                 )}
+
             </div>
         </div>
     );

@@ -8,7 +8,7 @@ const router = express.Router();
 // 🔥 CREATE RESOURCE
 router.post("/", protect, authorize("admin", "counselor"), async (req, res) => {
   try {
-    const { title, description, type, link } = req.body;
+    const { title, description, type, link, visibleTo } = req.body;
 
     if (!title || !description || !type || !link) {
       return res.status(400).json({
@@ -21,7 +21,8 @@ router.post("/", protect, authorize("admin", "counselor"), async (req, res) => {
       description,
       type,
       link,
-      createdBy: req.user.id
+      createdBy: req.user.id,
+      visibleTo: visibleTo || [] // ✅ FIX
     });
 
     await resource.save();
@@ -43,6 +44,7 @@ router.get("/", protect, async (req, res) => {
   try {
     const resources = await Resource.find()
       .populate("createdBy", "name role")
+      .populate("visibleTo", "_id name")
       .sort({ createdAt: -1 });
 
     res.json(resources);
@@ -88,17 +90,23 @@ router.delete("/:id", protect, authorize("admin"), async (req, res) => {
 // 🔥 OPTIONAL: UPDATE RESOURCE (future use)
 router.put("/:id", protect, authorize("admin", "counselor"), async (req, res) => {
   try {
-    const { id } = req.params;
+    const { title, description, type, link, visibleTo } = req.body;
 
-    const updated = await Resource.findByIdAndUpdate(
-      id,
-      req.body,
-      { new: true }
-    ).populate("createdBy", "name role");
+    const resource = await Resource.findById(req.params.id);
 
-    if (!updated) {
+    if (!resource) {
       return res.status(404).json({ message: "Resource not found" });
     }
+
+    resource.title = title;
+    resource.description = description;
+    resource.type = type;
+    resource.link = link;
+    resource.visibleTo = visibleTo || [];
+
+    await resource.save();
+
+    const updated = await resource.populate("createdBy", "name role");
 
     res.json(updated);
 
@@ -108,5 +116,26 @@ router.put("/:id", protect, authorize("admin", "counselor"), async (req, res) =>
   }
 });
 
+router.get("/student", protect, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const resources = await Resource.find({
+      $or: [
+        { visibleTo: { $exists: false } },   // safety
+        { visibleTo: { $size: 0 } },         // public
+        { visibleTo: userId }                // assigned
+      ]
+    })
+      .populate("createdBy", "name role")
+      .sort({ createdAt: -1 });
+
+    res.json(resources);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 module.exports = router;
