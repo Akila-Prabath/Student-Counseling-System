@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
+import blogIcon from "../assets/blog.png";
 
 function CounselorResources() {
     const [resources, setResources] = useState([]);
@@ -54,7 +55,7 @@ function CounselorResources() {
                 ? `https://img.youtube.com/vi/${id}/hqdefault.jpg`
                 : "https://img.icons8.com/color/96/video.png";
         }
-        return "https://cdn-icons-png.flaticon.com/512/337/337946.png";
+        return blogIcon;
     };
 
     // ================= ACTIONS =================
