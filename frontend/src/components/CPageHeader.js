@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-function PageHeader() {
+function CPageHeader() {
   const navigate = useNavigate();
 
   return (
@@ -24,4 +24,4 @@ function PageHeader() {
   );
 }
 
-export default PageHeader;
+export default CPageHeader;
