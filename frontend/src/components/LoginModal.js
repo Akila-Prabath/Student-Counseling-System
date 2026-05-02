@@ -2,6 +2,7 @@ import { useState } from "react";
 import API from "../services/api";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
   const [username, setUsername] = useState("");
@@ -9,7 +10,6 @@ function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
@@ -17,30 +17,57 @@ function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
 
-    try {
-      const res = await API.post("/auth/login", { username, password });
-
-      // Save token
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("role", res.data.user.role);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-
-      // Redirect based on role (optional)
-      const role = res.data.user.role;
-
-      if (role === "admin") {
-      window.location.href = "/admin";
-    } else {
-      window.location.href = "/";
+    // 🔥 VALIDATION
+    if (!username || !password) {
+      return toast.warning("Please fill all fields");
     }
 
+    try {
+      setLoading(true);
+
+      const res = await API.post("/auth/login", {
+        username,
+        password
+      });
+
+      // 🔥 SAVE AUTH
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", res.data.user.role);
+
+      // ✅ STANDARDIZE _id
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          ...res.data.user,
+          _id: res.data.user._id || res.data.user.id
+        })
+      );
+
+      // ✅ SUCCESS TOAST
+      toast.success(`Welcome back ${res.data.user.name}!`);
+
+      const role = res.data.user.role;
+
+      // 🔥 CLOSE MODAL
       onClose();
 
+      // 🔥 REDIRECT
+      setTimeout(() => {
+        if (role === "admin") {
+          window.location.href = "/admin";
+        } else {
+          window.location.href = "/";
+        }
+      }, 1000);
+
     } catch (error) {
-      setError(error.response?.data?.message || "Login failed");
+      console.error(error);
+
+      toast.error(
+        error.response?.data?.message || "Login failed"
+      );
+
     } finally {
       setLoading(false);
     }
@@ -52,13 +79,13 @@ function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
       onClick={onClose}
     >
 
-      {/* Modal */}
+      {/* MODAL */}
       <div
-        className="bg-white/90 backdrop-blur-md p-8 rounded-2xl w-[90%] max-w-md shadow-2xl relative"
+        className="bg-white/90 backdrop-blur-md p-8 rounded-2xl w-[90%] max-w-md shadow-2xl relative animate-fadeIn"
         onClick={(e) => e.stopPropagation()}
       >
 
-        {/* Title */}
+        {/* TITLE */}
         <h2 className="text-3xl font-bold mb-2 text-center">
           Welcome Back to MindCare
         </h2>
@@ -67,33 +94,27 @@ function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
           Login to your account
         </p>
 
-        {/* Error */}
-        {error && (
-          <div className="bg-red-100 text-red-600 p-2 rounded mb-4 text-sm text-center">
-            {error}
-          </div>
-        )}
-
-        {/* Form */}
+        {/* FORM */}
         <form onSubmit={handleLogin} className="space-y-4">
 
-          {/* Username */}
+          {/* USERNAME */}
           <input
             type="text"
             placeholder="Enter your username"
+            value={username}
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             onChange={(e) => setUsername(e.target.value)}
-            required
           />
 
-          {/* Password */}
+          {/* PASSWORD */}
           <div className="relative">
+
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
+              value={password}
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
 
             <span
@@ -102,28 +123,29 @@ function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
+
           </div>
 
-          {/* Login Button */}
+          {/* LOGIN BUTTON */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700 transition"
+            className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700 transition disabled:opacity-60"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
 
         </form>
 
-        {/* Close Button */}
+        {/* CLOSE */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-4 text-red-800 hover:text-red text-xl"
+          className="absolute top-3 right-4 text-gray-500 hover:text-red-500 text-xl"
         >
           ✕
         </button>
 
-        {/* Register Redirect */}
+        {/* REGISTER */}
         <p className="text-center text-sm text-gray-600 mt-4">
           Don’t have an account?{" "}
           <span

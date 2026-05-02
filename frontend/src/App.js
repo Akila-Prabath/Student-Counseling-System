@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Home from "./pages/Home";
 import Appointments from "./pages/Appointments";
@@ -51,7 +53,7 @@ function App() {
         <Route path="/Contact" element={<Contact />} />
 
         <Route path="/admin" element={<AdminDashboard />} />
-        
+
         <Route path="/admin/students/add" element={<AddStudent />} />
         <Route path="/admin/students" element={<ViewStudents />} />
         <Route path="/admin/students/edit/:id" element={<EditStudent />} />
@@ -123,8 +125,22 @@ function App() {
             </ProtectedRoute>
           }
         />
+        
       </Routes>
+      <ToastContainer
+          position="bottom-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnHover
+          theme="dark"
+          toastClassName="rounded-xl"
+        />
+        
     </Router>
+
+    
   );
 }
 
