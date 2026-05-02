@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import API from "../services/api";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
     const [form, setForm] = useState({
@@ -14,12 +15,10 @@ function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
 
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        const open = () => { };
+        const open = () => {};
         window.addEventListener("openRegister", open);
         return () => window.removeEventListener("openRegister", open);
     }, []);
@@ -33,23 +32,24 @@ function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
     const handleRegister = async (e) => {
         e.preventDefault();
 
+        // Username validation
         if (form.username.length < 3) {
-            setError("Username must be at least 3 characters");
+            toast.error("Username must be at least 3 characters");
             return;
         }
 
-        // 🔴 Password validation
+        // Password match validation
         if (form.password !== form.confirmPassword) {
-            setError("Passwords do not match");
+            toast.error("Passwords do not match");
             return;
         }
 
+        // Password length validation
         if (form.password.length < 6) {
-            setError("Password must be at least 6 characters");
+            toast.error("Password must be at least 6 characters");
             return;
         }
 
-        setError("");
         setLoading(true);
 
         try {
@@ -60,7 +60,8 @@ function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
                 password: form.password,
             });
 
-            setSuccess("Registration successful! Please login.");
+            toast.success("Registration successful! Redirecting to login...");
+
             setForm({
                 name: "",
                 username: "",
@@ -69,14 +70,14 @@ function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
                 confirmPassword: "",
             });
 
-            setSuccess("Registration successful! Redirecting to login...");
-
             setTimeout(() => {
                 onSwitchToLogin();
             }, 1500);
 
         } catch (err) {
-            setError(err.response?.data?.message || "Registration failed");
+            toast.error(
+                err.response?.data?.message || "Registration failed"
+            );
         } finally {
             setLoading(false);
         }
@@ -87,7 +88,6 @@ function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
             className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50"
             onClick={onClose}
         >
-
             <div
                 className="bg-white/90 backdrop-blur-md p-8 rounded-2xl w-[90%] max-w-md shadow-2xl relative"
                 onClick={(e) => e.stopPropagation()}
@@ -101,20 +101,6 @@ function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
                 <p className="text-center text-gray-500 mb-6">
                     Register as a student
                 </p>
-
-                {/* Error */}
-                {error && (
-                    <div className="bg-red-100 text-red-600 p-2 rounded mb-4 text-sm text-center">
-                        {error}
-                    </div>
-                )}
-
-                {/* Success */}
-                {success && (
-                    <div className="bg-green-100 text-green-600 p-2 rounded mb-4 text-sm text-center">
-                        {success}
-                    </div>
-                )}
 
                 <form onSubmit={handleRegister} className="space-y-4">
 
@@ -162,6 +148,7 @@ function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
                             required
                             className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-500"
                         />
+
                         <span
                             className="absolute right-3 top-3 cursor-pointer text-gray-500"
                             onClick={() => setShowPassword(!showPassword)}
@@ -181,6 +168,7 @@ function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
                             required
                             className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-500"
                         />
+
                         <span
                             className="absolute right-3 top-3 cursor-pointer text-gray-500"
                             onClick={() => setShowConfirm(!showConfirm)}
