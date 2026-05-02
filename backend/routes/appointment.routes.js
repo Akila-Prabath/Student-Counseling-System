@@ -10,7 +10,7 @@ router.post("/", protect, authorize("student"), async (req, res) => {
   try {
     const { counselorId, serviceType, date, timeSlot, reason } = req.body;
 
-    if (!counselorId || !serviceType || !date || !timeSlot || !reason) {
+    if (!counselorId || !serviceType || !date || !timeSlot) {
       return res.status(400).json({
         message: "Please provide all required fields"
       });
@@ -22,7 +22,7 @@ router.post("/", protect, authorize("student"), async (req, res) => {
       serviceType,
       date,
       timeSlot,
-      reason
+      reason: reason || ""
     });
 
     await newAppointment.save();
