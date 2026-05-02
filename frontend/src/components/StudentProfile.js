@@ -1,16 +1,30 @@
 import { useState, useEffect } from "react";
 import API from "../services/api";
-import { FaEdit, FaCamera } from "react-icons/fa";
+
+import {
+  FaEdit,
+  FaCamera
+} from "react-icons/fa";
+
+import { toast } from "react-toastify";
 
 function StudentProfile() {
+
   const [user, setUser] = useState(null);
+
   const [edit, setEdit] = useState(false);
+
   const [image, setImage] = useState(null);
 
   const [loading, setLoading] = useState(false);
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
-  const [stats, setStats] = useState({ appointments: 0, messages: 0 });
+  const [showPasswordModal, setShowPasswordModal] =
+    useState(false);
+
+  const [stats, setStats] = useState({
+    appointments: 0,
+    messages: 0
+  });
 
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
@@ -22,75 +36,165 @@ function StudentProfile() {
     email: ""
   });
 
-  // ================= LOAD USER =================
+  // LOAD USER
   useEffect(() => {
-    const u = JSON.parse(localStorage.getItem("user"));
+
+    const u = JSON.parse(
+      localStorage.getItem("user")
+    );
+
     if (u) {
+
       setUser(u);
-      setForm({ name: u.name, email: u.email });
+
+      setForm({
+        name: u.name,
+        email: u.email
+      });
     }
+
   }, []);
 
-  // ================= FETCH STATS =================
+  // FETCH STATS
   useEffect(() => {
     fetchStats();
   }, []);
 
   const fetchStats = async () => {
+
     try {
+
       const res = await API.get("/users/stats");
+
       setStats(res.data);
+
     } catch (err) {
+
       console.error(err);
+
+      toast.error("Failed to load stats");
     }
   };
 
-  // ================= IMAGE =================
+  // IMAGE
   const handleImage = (e) => {
     setImage(e.target.files[0]);
   };
 
-  // ================= UPDATE PROFILE =================
+  // UPDATE PROFILE
   const handleUpdate = async () => {
+
     try {
+
+      // Email validation
+      const emailRegex =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailRegex.test(form.email)) {
+        return toast.error(
+          "Please enter a valid email address"
+        );
+      }
+
       setLoading(true);
 
-      const stored = JSON.parse(localStorage.getItem("user"));
+      const stored = JSON.parse(
+        localStorage.getItem("user")
+      );
+
       const userId = stored?._id;
 
       const formData = new FormData();
+
       formData.append("name", form.name);
+
       formData.append("email", form.email);
 
       if (image) {
         formData.append("profilePic", image);
       }
 
-      const res = await API.put(`/users/${userId}`, formData);
+      const res = await API.put(
+        `/users/${userId}`,
+        formData
+      );
 
-      localStorage.setItem("user", JSON.stringify(res.data));
+      localStorage.setItem(
+        "user",
+        JSON.stringify(res.data)
+      );
+
       setUser(res.data);
+
       setEdit(false);
+
       setImage(null);
 
+      toast.success(
+        "Profile updated successfully"
+      );
+
     } catch (err) {
-      alert("Update failed");
+
+      console.error(err);
+
+      toast.error(
+        err.response?.data?.message ||
+        "Update failed"
+      );
+
     } finally {
+
       setLoading(false);
     }
   };
 
-  // ================= CHANGE PASSWORD =================
+  // CHANGE PASSWORD
   const handleChangePassword = async () => {
-    try {
-      await API.put("/users/change-password", passwordForm);
 
-      alert("Password updated");
+    try {
+
+      if (
+        !passwordForm.currentPassword ||
+        !passwordForm.newPassword
+      ) {
+        return toast.error(
+          "Please fill all fields"
+        );
+      }
+
+      if (
+        passwordForm.newPassword.length < 6
+      ) {
+        return toast.error(
+          "Password must be at least 6 characters"
+        );
+      }
+
+      await API.put(
+        "/users/change-password",
+        passwordForm
+      );
+
+      toast.success(
+        "Password updated successfully"
+      );
+
       setShowPasswordModal(false);
-      setPasswordForm({ currentPassword: "", newPassword: "" });
+
+      setPasswordForm({
+        currentPassword: "",
+        newPassword: ""
+      });
 
     } catch (err) {
-      alert(err.response?.data?.message || "Error");
+
+      console.error(err);
+
+      toast.error(
+        err.response?.data?.message ||
+        "Error updating password"
+      );
     }
   };
 
@@ -115,84 +219,151 @@ function StudentProfile() {
 
           <div className="grid md:grid-cols-3 gap-6">
 
-            {/* ================= LEFT SIDE ================= */}
+            {/* LEFT SIDE */}
             <div className="flex flex-col items-center text-center">
 
               <div className="relative">
+
                 <img
                   src={previewImage}
+                  alt="profile"
                   className="w-32 h-32 rounded-full object-cover border-4 border-white shadow"
+                  onError={(e) => {
+                    e.target.src =
+                      "https://i.pravatar.cc/150";
+                  }}
                 />
 
                 {edit && (
+
                   <label className="absolute bottom-0 right-0 bg-black text-white p-2 rounded-full cursor-pointer">
+
                     <FaCamera />
-                    <input type="file" hidden onChange={handleImage} />
+
+                    <input
+                      type="file"
+                      hidden
+                      onChange={handleImage}
+                    />
+
                   </label>
+
                 )}
+
               </div>
 
-              <h2 className="text-lg font-bold mt-3">{user.name}</h2>
-              <p className="text-gray-500 text-sm">Student</p>
+              <h2 className="text-lg font-bold mt-3">
+                {user.name}
+              </h2>
+
+              <p className="text-gray-500 text-sm">
+                Student
+              </p>
 
               {/* STATS */}
               <div className="grid grid-cols-2 gap-3 mt-6 w-full">
+
                 <div className="bg-gray-50 p-3 rounded-xl">
-                  <p className="text-lg font-bold">{stats.appointments}</p>
-                  <p className="text-xs text-gray-500">Appointments</p>
+
+                  <p className="text-lg font-bold">
+                    {stats.appointments}
+                  </p>
+
+                  <p className="text-xs text-gray-500">
+                    Appointments
+                  </p>
+
                 </div>
 
                 <div className="bg-gray-50 p-3 rounded-xl">
-                  <p className="text-lg font-bold">{stats.messages}</p>
-                  <p className="text-xs text-gray-500">Messages</p>
+
+                  <p className="text-lg font-bold">
+                    {stats.messages}
+                  </p>
+
+                  <p className="text-xs text-gray-500">
+                    Messages
+                  </p>
+
                 </div>
+
               </div>
 
             </div>
 
-            {/* ================= RIGHT SIDE ================= */}
+            {/* RIGHT SIDE */}
             <div className="md:col-span-2 space-y-4">
 
               <div>
-                <label className="text-sm text-gray-500">Full Name</label>
+
+                <label className="text-sm text-gray-500">
+                  Full Name
+                </label>
+
                 <input
                   disabled={!edit}
                   value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      name: e.target.value
+                    })
+                  }
                   className="w-full border p-2 rounded-lg mt-1"
                 />
+
               </div>
 
               <div>
-                <label className="text-sm text-gray-500">Email</label>
+
+                <label className="text-sm text-gray-500">
+                  Email
+                </label>
+
                 <input
                   disabled={!edit}
                   value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      email: e.target.value
+                    })
+                  }
                   className="w-full border p-2 rounded-lg mt-1"
                 />
+
               </div>
 
               {/* ACTIONS */}
               <div className="flex justify-between items-center pt-4">
 
                 <button
-                  onClick={() => setShowPasswordModal(true)}
+                  onClick={() =>
+                    setShowPasswordModal(true)
+                  }
                   className="bg-orange-500 font-sm text-white px-4 py-2 rounded-lg flex items-center gap-2"
                 >
                   Change Password
                 </button>
 
                 {!edit ? (
+
                   <button
                     onClick={() => setEdit(true)}
                     className="bg-orange-500 text-white px-4 py-2 rounded-lg flex items-center gap-2"
                   >
+
                     <FaEdit /> Edit
+
                   </button>
+
                 ) : (
+
                   <div className="flex gap-2">
-                    <button onClick={() => setEdit(false)}>
+
+                    <button
+                      onClick={() => setEdit(false)}
+                    >
                       Cancel
                     </button>
 
@@ -200,9 +371,13 @@ function StudentProfile() {
                       onClick={handleUpdate}
                       className="bg-orange-600 text-white px-4 py-2 rounded-lg"
                     >
-                      {loading ? "Saving..." : "Save"}
+                      {loading
+                        ? "Saving..."
+                        : "Save"}
                     </button>
+
                   </div>
+
                 )}
 
               </div>
@@ -215,13 +390,16 @@ function StudentProfile() {
 
       </div>
 
-      {/* ================= PASSWORD MODAL ================= */}
+      {/* PASSWORD MODAL */}
       {showPasswordModal && (
+
         <div className="fixed inset-0 bg-black/40 flex justify-center items-center">
 
           <div className="bg-white p-6 rounded-2xl w-[350px] space-y-4">
 
-            <h3 className="text-lg font-semibold">Change Password</h3>
+            <h3 className="text-lg font-semibold">
+              Change Password
+            </h3>
 
             <input
               type="password"
@@ -230,7 +408,8 @@ function StudentProfile() {
               onChange={(e) =>
                 setPasswordForm({
                   ...passwordForm,
-                  currentPassword: e.target.value
+                  currentPassword:
+                    e.target.value
                 })
               }
               className="w-full border p-2 rounded"
@@ -243,14 +422,20 @@ function StudentProfile() {
               onChange={(e) =>
                 setPasswordForm({
                   ...passwordForm,
-                  newPassword: e.target.value
+                  newPassword:
+                    e.target.value
                 })
               }
               className="w-full border p-2 rounded"
             />
 
             <div className="flex justify-end gap-2">
-              <button onClick={() => setShowPasswordModal(false)}>
+
+              <button
+                onClick={() =>
+                  setShowPasswordModal(false)
+                }
+              >
                 Cancel
               </button>
 
@@ -260,6 +445,7 @@ function StudentProfile() {
               >
                 Save
               </button>
+
             </div>
 
           </div>
