@@ -1,9 +1,17 @@
 import officeImg from "../assets/contact/office.jpg";
-import { FaMapMarkerAlt, FaEnvelope, FaPhone } from "react-icons/fa";
+import {
+  FaMapMarkerAlt,
+  FaEnvelope,
+  FaPhone
+} from "react-icons/fa";
+
 import { useState } from "react";
 import API from "../services/api";
 
+import { toast } from "react-toastify";
+
 function ContactUs() {
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -11,9 +19,8 @@ function ContactUs() {
     message: ""
   });
 
-  const [status, setStatus] = useState("");
-
   const handleChange = (e) => {
+
     setForm({
       ...form,
       [e.target.name]: e.target.value
@@ -21,13 +28,43 @@ function ContactUs() {
   };
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
+    // Required fields validation
+    if (
+      !form.name ||
+      !form.email ||
+      !form.phone ||
+      !form.message
+    ) {
+      return toast.error("Please fill all fields");
+    }
+
+    // Email validation
+    const emailRegex =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(form.email)) {
+      return toast.error("Please enter a valid email address");
+    }
+
+    // Phone validation
+    const phoneRegex = /^[0-9]{10}$/;
+
+    if (!phoneRegex.test(form.phone)) {
+      return toast.error("Phone number must contain 10 digits");
+    }
+
     try {
+
       const res = await API.post("/contact", form);
 
-      setStatus("✅ Message sent successfully!");
+      toast.success(
+        res.data.message || "Message sent successfully!"
+      );
 
+      // Reset form
       setForm({
         name: "",
         email: "",
@@ -36,16 +73,23 @@ function ContactUs() {
       });
 
     } catch (error) {
-      setStatus(error.response?.data?.message || "❌ Failed to send");
+
+      toast.error(
+        error.response?.data?.message ||
+        "Failed to send message"
+      );
     }
   };
 
   return (
-    <div id="contact" className="py-20 px-6 md:px-20 bg-white">
+    <div
+      id="contact"
+      className="py-20 px-6 md:px-20 bg-white"
+    >
 
       <div className="grid md:grid-cols-2 gap-10 items-start">
 
-        {/* 🔹 LEFT SIDE */}
+        {/* LEFT SIDE */}
         <div>
 
           {/* Badge */}
@@ -60,18 +104,22 @@ function ContactUs() {
 
           {/* Description */}
           <p className="text-gray-600 mb-8 max-w-md">
-            Whether you have a question, a suggestion, or just want to say hello,
-            this is the place to do it. Please fill out the form below and we’ll
-            get back to you as soon as possible.
+            Whether you have a question, a suggestion,
+            or just want to say hello, this is the place
+            to do it. Please fill out the form below and
+            we’ll get back to you as soon as possible.
           </p>
 
           {/* Office */}
-          <h3 className="text-xl font-semibold mb-4">Our Office</h3>
+          <h3 className="text-xl font-semibold mb-4">
+            Our Office
+          </h3>
 
           <div className="flex gap-4">
 
             {/* Image */}
             <div className="relative w-50 h-36 md:h-42 rounded-xl overflow-hidden">
+
               <img
                 src={officeImg}
                 alt="Office"
@@ -81,39 +129,58 @@ function ContactUs() {
               <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-xs text-center py-1">
                 Mon - Fri 08.00 - 18.00
               </div>
+
             </div>
 
             {/* Details */}
             <div className="space-y-4 text-sm">
 
               <div className="flex items-start gap-2">
+
                 <FaMapMarkerAlt className="text-black mt-1" />
+
                 <div>
-                  <p className="font-semibold">Office Location</p>
+                  <p className="font-semibold">
+                    Office Location
+                  </p>
+
                   <p className="text-gray-500">
                     Kurunegala, Sri Lanka
                   </p>
                 </div>
+
               </div>
 
               <div className="flex items-start gap-2">
+
                 <FaEnvelope className="text-black mt-1" />
+
                 <div>
-                  <p className="font-semibold">Send a Message</p>
+                  <p className="font-semibold">
+                    Send a Message
+                  </p>
+
                   <p className="text-gray-500">
                     contact@mindcare.com
                   </p>
                 </div>
+
               </div>
 
               <div className="flex items-start gap-2">
+
                 <FaPhone className="text-black mt-1" />
+
                 <div>
-                  <p className="font-semibold">Call Us Directly</p>
+                  <p className="font-semibold">
+                    Call Us Directly
+                  </p>
+
                   <p className="text-gray-500">
                     +94 71 234 5678
                   </p>
                 </div>
+
               </div>
 
             </div>
@@ -122,11 +189,14 @@ function ContactUs() {
 
         </div>
 
-        {/* 🔹 RIGHT SIDE FORM */}
+        {/* RIGHT SIDE FORM */}
         <div className="bg-orange-100 p-6 md:p-8 rounded-2xl shadow">
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4"
+          >
+
             <input
               type="text"
               name="name"
@@ -146,7 +216,7 @@ function ContactUs() {
             />
 
             <input
-              type="text"
+              type="tel"
               name="phone"
               value={form.phone}
               placeholder="Phone"
@@ -155,7 +225,6 @@ function ContactUs() {
             />
 
             <textarea
-              type="text"
               name="message"
               value={form.message}
               placeholder="Your message"
@@ -171,15 +240,12 @@ function ContactUs() {
               Send Message
             </button>
 
-            {status && (
-              <p className="text-sm text-green-600">{status}</p>
-            )}
-
           </form>
 
         </div>
 
       </div>
+
     </div>
   );
 }
