@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../../services/api";
+
 import {
   PieChart,
   Pie,
@@ -8,15 +9,18 @@ import {
   ResponsiveContainer
 } from "recharts";
 
+import { toast } from "react-toastify";
+
 const COLORS = [
-  "#6050DC", 
-  "#D52DB7", 
-  "#FF2E7E", 
-  "#FF6B45", 
-  "#FFAB05"  
+  "#6050DC",
+  "#D52DB7",
+  "#FF2E7E",
+  "#FF6B45",
+  "#FFAB05"
 ];
 
 function ServicePieChart() {
+
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -24,17 +28,26 @@ function ServicePieChart() {
   }, []);
 
   const fetchData = async () => {
+
     try {
-      const res = await API.get("/appointments");
+
+      const res = await API.get(
+        "/appointments"
+      );
 
       const counts = {};
 
       res.data.forEach((a) => {
+
         const type = a.serviceType;
-        counts[type] = (counts[type] || 0) + 1;
+
+        counts[type] =
+          (counts[type] || 0) + 1;
       });
 
-      const formatted = Object.keys(counts).map((key) => ({
+      const formatted = Object.keys(
+        counts
+      ).map((key) => ({
         name: key,
         value: counts[key]
       }));
@@ -42,20 +55,46 @@ function ServicePieChart() {
       setData(formatted);
 
     } catch (err) {
-      console.error("Error fetching service chart", err);
+
+      console.error(
+        "Error fetching service chart",
+        err
+      );
+
+      toast.error(
+        err.response?.data?.message ||
+        "Failed to load service chart"
+      );
     }
   };
 
-  // 🔥 Custom Tooltip
-  const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
+  // Custom Tooltip
+  const CustomTooltip = ({
+    active,
+    payload
+  }) => {
+
+    if (
+      active &&
+      payload &&
+      payload.length
+    ) {
+
       return (
         <div className="bg-white dark:bg-gray-800 p-2 rounded shadow text-sm">
-          <p className="font-semibold">{payload[0].name}</p>
-          <p>{payload[0].value} appointments</p>
+
+          <p className="font-semibold">
+            {payload[0].name}
+          </p>
+
+          <p>
+            {payload[0].value} appointments
+          </p>
+
         </div>
       );
     }
+
     return null;
   };
 
@@ -66,7 +105,11 @@ function ServicePieChart() {
         Service Distribution
       </h3>
 
-      <ResponsiveContainer width="100%" height={260}>
+      <ResponsiveContainer
+        width="100%"
+        height={260}
+      >
+
         <PieChart>
 
           <Pie
@@ -76,27 +119,56 @@ function ServicePieChart() {
             paddingAngle={4}
             dataKey="value"
           >
+
             {data.map((entry, index) => (
-              <Cell key={index} fill={COLORS[index % COLORS.length]} />
+
+              <Cell
+                key={index}
+                fill={
+                  COLORS[
+                    index % COLORS.length
+                  ]
+                }
+              />
+
             ))}
+
           </Pie>
 
-          <Tooltip content={<CustomTooltip />} />
-            
+          <Tooltip
+            content={<CustomTooltip />}
+          />
+
         </PieChart>
+
       </ResponsiveContainer>
 
-      {/* 🔥 Legend */}
+      {/* LEGEND */}
       <div className="flex flex-wrap gap-4 mt-4 text-sm">
+
         {data.map((item, index) => (
-          <div key={index} className="flex items-center gap-2">
+
+          <div
+            key={index}
+            className="flex items-center gap-2"
+          >
+
             <span
               className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: COLORS[index % COLORS.length] }}
+              style={{
+                backgroundColor:
+                  COLORS[
+                    index % COLORS.length
+                  ]
+              }}
             ></span>
+
             {item.name}
+
           </div>
+
         ))}
+
       </div>
 
     </div>
