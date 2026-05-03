@@ -125,7 +125,7 @@ function StudentMessage() {
                         placeholder="Search..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full mt-3 px-3 py-2 border rounded-lg text-sm"
+                        className="w-full mt-3 px-3 py-2 border rounded-lg text-sm bg-white"
                     />
                 </div>
 
@@ -168,7 +168,7 @@ function StudentMessage() {
             <div className="flex-1 flex flex-col">
 
                 {!selected ? (
-                    <div className="flex flex-col items-center justify-center h-full text-center">
+                    <div className="flex flex-col items-center justify-center h-full text-center bg-[#efeae2]">
                         <div className="text-6xl mb-4">💬</div>
                         <h2 className="text-xl font-semibold">
                             Chat with counselor for better solution

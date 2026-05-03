@@ -119,7 +119,7 @@ function CounselorResources() {
     };
 
     return (
-        <div className="p-6 bg-orange-50">
+        <div className="p-6 bg-stone-100">
 
             {/* HEADER */}
             <div className="flex justify-between items-center mb-6">
@@ -134,13 +134,13 @@ function CounselorResources() {
             </div>
 
             {/* FILTER */}
-            <div className="flex gap-2 mb-6 bg-gray-100 p-1 rounded-xl w-fit">
+            <div className="flex gap-2 mb-6 bg-white p-1 rounded-xl w-fit">
                 {["all", "article", "video"].map((f) => (
                     <button
                         key={f}
                         onClick={() => setFilter(f)}
                         className={`px-4 py-1 rounded-lg text-sm capitalize ${filter === f
-                            ? "bg-white shadow text-orange-600"
+                            ? "bg-orange-600 shadow text-white"
                             : "text-gray-500"
                             }`}
                     >
