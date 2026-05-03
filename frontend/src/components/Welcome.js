@@ -71,20 +71,8 @@ function Welcome() {
 
           </div>
 
-          {/* Rating + Button */}
+          {/* Button */}
           <div className="flex items-center justify-between flex-wrap gap-4">
-
-            <div>
-              <p className="font-semibold">Excellent</p>
-
-              <div className="flex text-yellow-400">
-                <FaStar /><FaStar /><FaStar /><FaStar /><FaStar />
-              </div>
-
-              <p className="text-sm text-gray-500">
-                Based on 85 reviews
-              </p>
-            </div>
 
             <button 
             onClick={() => navigate("/AboutUs")}
