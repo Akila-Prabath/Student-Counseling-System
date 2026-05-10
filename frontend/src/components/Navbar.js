@@ -60,7 +60,7 @@ function Navbar({ onLoginClick }) {
 
   return (
     <nav
-      className={`fixed w-full top-0 z-50 transition-all duration-300 ${scrolled ? "bg-stone-950 shadow-md text-white" : "bg-stone-950 text-white"
+      className={`fixed w-full top-0 z-50 transition-all duration-300 ${scrolled ? "bg-stone-950 shadow-md text-white" : "text-white"
         }`}
     >
       <div className="flex justify-between items-center px-6 md:px-20 py-4">
@@ -68,13 +68,13 @@ function Navbar({ onLoginClick }) {
         {/* Logo */}
         <h1
           onClick={() => navigate("/")}
-          className="text-2xl font-bold text-orange-500 cursor-pointer"
+          className="text-2xl font-bold text-orange-500 cursor-pointer md:ml-20"
         >
           MindCare
         </h1>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-10 font-semibold">
+        <div className="hidden md:flex items-center gap-10 font-bold">
 
           <button onClick={() => navigate("/")} className="hover:text-orange-500">
             Home
@@ -176,7 +176,7 @@ function Navbar({ onLoginClick }) {
           {!user ? (
             <button
               onClick={onLoginClick}
-              className="bg-orange-950 text-white px-5 py-2 rounded-lg hover:bg-orange-600 transition"
+              className="bg-orange-700 text-white px-5 py-2 rounded hover:bg-orange-600 transition"
             >
               Login
             </button>
