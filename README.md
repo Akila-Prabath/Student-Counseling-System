@@ -78,7 +78,8 @@ The system is designed for universities, institutes, and educational organizatio
 
 ### 🏠 Landing Page
 
-<img width="1903" height="901" alt="Screenshot 2026-05-03 111327" src="https://github.com/user-attachments/assets/1628a88a-ee36-4243-a93b-902186b3ac41" />
+<img width="1918" height="909" alt="Screenshot (496)" src="https://github.com/user-attachments/assets/fd0f67cd-1ea4-4568-b13e-47e0f92935d7" />
+
 
 - Modern and fully responsive homepage design
 - Dynamic counselor showcase section
